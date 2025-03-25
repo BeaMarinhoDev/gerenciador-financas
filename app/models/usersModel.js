@@ -48,10 +48,31 @@ async function createUser(user) {
   }
 }
 
+async function getUserById(userId) {
+  try {
+    // Execute a query using promise
+    const db = await connection.connect();
+
+    const [rows, fields] = await db.execute('SELECT * FROM users WHERE id = ?', [userId]);
+    console.log('Query Result:', rows);
+
+    // Close the connection
+    await db.end();
+
+    if (rows.length > 0)
+      return rows[0];
+    else
+      return null;
+  } catch (err) {
+    console.error('Error:', err);
+  }
+}
+
 // Implemente outras funções para atualizar, excluir, etc.
 
 module.exports = {
   getAllUsers,
   createUser,
+  getUserById
   // Exporte outras funções
 };

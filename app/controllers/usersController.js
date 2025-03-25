@@ -26,13 +26,17 @@ async function createUser(req, res) {
 
 async function getUserById(req, res) {
   try {
-    const userId = await usersModel.createUser(req.body);
-    res.status(201).json({ id: userId, ...req.body });
+    const userId = req.params.id;
+    const user = await usersModel.getUserById(userId);
+    
+    if (user !== null)
+      res.json(user);
+    else
+      res.status(404).json({ mensagem: 'Nao foi encontrado o usuário ' + userId });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ mensagem: 'Erro ao criar usuário' });
+    res.status(500).json({ mensagem: 'Erro ao buscar o usuário ' + userId });
   }
-  return userId;
 }
 
 
