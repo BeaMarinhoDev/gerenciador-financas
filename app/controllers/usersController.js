@@ -38,14 +38,24 @@ async function getUserById(req, res) {
     res.status(500).json({ mensagem: 'Erro ao buscar o usuário ' + userId });
   }
 }
-
-
-// Implemente outras funções para atualizar, excluir, etc.
+async function updateUserById(req, res) {
+  try {
+      const affectedRows = await usersModel.updateUserById(req.params.id, req.body);
+      if (affectedRows > 0) {
+          res.json({ mensagem: 'Usuário atualizado com sucesso' });
+      } else {
+          res.status(404).json({ mensagem: 'Usuário não encontrado' });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ mensagem: 'Erro ao atualizar usuário' });
+  }
+}
 
 module.exports = {
   getAllUsers,
   createUser,
   getUserById,
-  // Importe outras funções
+  updateUserById 
 };
-  // Exporte outras funções
+

@@ -67,12 +67,25 @@ async function getUserById(userId) {
     console.error('Error:', err);
   }
 }
-
-// Implemente outras funções para atualizar, excluir, etc.
+async function updateUserById(id, user) {
+  try {
+      const db = await connection.connect();
+      const { nome, email, senha, cpf, cep, numero, complemento } = user;
+      const [result] = await db.execute(
+          'UPDATE users SET nome = ?, email = ?, senha = ?, cpf = ?, cep = ?, numero = ?, complemento = ? WHERE id = ?',
+          [nome, email, senha, cpf, cep, numero, complemento, id]
+      );
+      await db.end();
+      return result.affectedRows; // Retorna o número de linhas afetadas
+  } catch (err) {
+      console.error('Error:', err);
+      throw err;
+  }
+}
 
 module.exports = {
   getAllUsers,
   createUser,
-  getUserById
-  // Exporte outras funções
+  getUserById,
+  updateUserById
 };
