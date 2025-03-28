@@ -82,10 +82,24 @@ async function updateUserById(id, user) {
       throw err;
   }
 }
+async function deleteUserById(id) {
+  try {
+    const db = await connection.connect();
+    const [result] = await db.execute('DELETE FROM users WHERE id = ?', [id]);
+    await db.end();
+    return result.affectedRows; // Retorna o número de linhas afetadas
+  } catch (err) {
+    console.error('Error:', err);
+    throw err;
+  }
+}
 
 module.exports = {
   getAllUsers,
   createUser,
   getUserById,
-  updateUserById
+  updateUserById,
+  deleteUserById
 };
+
+

@@ -51,11 +51,26 @@ async function updateUserById(req, res) {
       res.status(500).json({ mensagem: 'Erro ao atualizar usuário' });
   }
 }
+async function deleteUserById(req, res) {
+  try {
+    const affectedRows = await usersModel.deleteUserById(req.params.id);
+    if (affectedRows > 0) {
+      res.json({ mensagem: 'Usuário excluído com sucesso' });
+    } else {
+      res.status(404).json({ mensagem: 'Usuário não encontrado' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao excluir usuário' });
+  }
+}
+
 
 module.exports = {
   getAllUsers,
   createUser,
   getUserById,
-  updateUserById 
+  updateUserById,
+  deleteUserById
 };
 
