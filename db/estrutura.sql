@@ -31,3 +31,13 @@ CREATE TABLE `users_categories` (
   CONSTRAINT `users_categories_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `users_categories_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `debits` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `valor` decimal(10,2) DEFAULT NULL,
+  `data_vencimento` date DEFAULT NULL,
+  `descricao` varchar(255) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
