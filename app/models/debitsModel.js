@@ -44,7 +44,7 @@ async function getDebitById(id) {
 async function updateDebitById(id, debit) {
   try {
     const db = await connection.connect();
-    const { valor, data, descricao, category_id, user_id } = debit;
+    const { valor, data_vencimento, descricao, category_id, user_id } = debit;
     const [result] = await db.execute(
       'UPDATE debits SET valor = ?, data_vencimento = ?, descricao = ?, category_id = ?, user_id = ? WHERE id = ?',
       [valor, data_vencimento, descricao, category_id, user_id, id]
