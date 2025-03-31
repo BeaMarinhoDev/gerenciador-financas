@@ -17,8 +17,8 @@ async function createCategory(category, userId) {
     const db = await connection.connect();
     const { nome, descricao, tipo } = category;
     const [result] = await db.execute(
-      'INSERT INTO categories (nome, descricao, tipo) VALUES (?, ?, ?)',
-      [nome, descricao, tipo]
+      'INSERT INTO categories (nome, descricao, tipo_categoria) VALUES (?, ?, ?)',
+      [nome, descricao, tipo_categoria]
     );
     const categoryId = result.insertId;
 
@@ -28,12 +28,18 @@ async function createCategory(category, userId) {
     );
 
     await db.end();
-    return categoryId;async function createCategory(category, userId) {
+    return categoryId;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+    /*async function createCategory(category, userId) {
       try {
         const db = await connection.connect();
         const { nome, descricao, tipo } = category;
         const [result] = await db.execute(
-          'INSERT INTO categories (nome, descricao, tipo) VALUES (?, ?, ?)',
+          'INSERT INTO categories (nome, descricao, tipo_categoria) VALUES (?, ?, ?)',
           [nome, descricao, tipo]
         );
         const categoryId = result.insertId;
@@ -49,19 +55,26 @@ async function createCategory(category, userId) {
         console.error(error);
         throw error;
       }
+      
     }
   } catch (error) {
     console.error(error);
     throw error;
   }
-}
+}*/
 
-async function getCategoryById(id) {
+async function getCategoriesByUserId(userId) {
   try {
     const db = await connection.connect();
-    const [rows] = await db.execute('SELECT * FROM categories WHERE id = ?', [id]);
+    const [rows] = await db.execute(
+      `SELECT c.*
+       FROM categories c
+       JOIN users_categories uc ON c.id = uc.category_id
+       WHERE uc.user_id = ?`,
+      [userId]
+    );
     await db.end();
-    return rows[0];
+    return rows;
   } catch (error) {
     console.error(error);
     throw error;
@@ -73,8 +86,8 @@ async function updateCategoryById(id, category) {
     const db = await connection.connect();
     const { nome, descricao, tipo } = category;
     const [result] = await db.execute(
-      'UPDATE categories SET nome = ?, descricao = ?, tipo = ? WHERE id = ?',
-      [nome, descricao, tipo, id]
+      'UPDATE categories SET nome = ?, descricao = ?, tipo_categoria = ? WHERE id = ?',
+      [nome, descricao, tipo_categoria, id]
     );
     await db.end();
     return result.affectedRows;
@@ -105,7 +118,7 @@ async function deleteCategoryById(id) {
 module.exports = {
   getAllCategories,
   createCategory,
-  getCategoryById,
   updateCategoryById,
-  deleteCategoryById
+  deleteCategoryById,
+  getCategoriesByUserId
 };

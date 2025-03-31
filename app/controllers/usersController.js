@@ -64,13 +64,24 @@ async function deleteUserById(req, res) {
     res.status(500).json({ mensagem: 'Erro ao excluir usuário' });
   }
 }
-
+async function getUserCategories(req, res) {
+  try {
+    const userId = req.params.id;
+    const categories = await usersModel.getUserCategories(userId);
+    console.log('Categories:', categories);
+    res.json(categories);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar categorias do usuário' });
+  }
+}
 
 module.exports = {
   getAllUsers,
   createUser,
   getUserById,
   updateUserById,
-  deleteUserById
+  deleteUserById,
+  getUserCategories
 };
 

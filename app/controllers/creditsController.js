@@ -35,6 +35,17 @@ async function getCreditById(req, res) {
   }
 }
 
+async function getCreditsByUserId(req, res) {
+  try {
+    const userId = req.params.id;
+    const credits = await creditsModel.getCreditsByUserId(userId);
+    res.json(credits);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar créditos do usuário' });
+  }
+}
+
 async function updateCreditById(req, res) {
   try {
     const affectedRows = await creditsModel.updateCreditById(req.params.id, req.body);
@@ -69,4 +80,5 @@ module.exports = {
   getCreditById,
   updateCreditById,
   deleteCreditById,
+  getCreditsByUserId
 };

@@ -35,6 +35,17 @@ async function getDebitById(req, res) {
   }
 }
 
+async function getDebitsByUserId(req, res) {
+  try {
+    const userId = req.params.id;
+    const debits = await debitsModel.getDebitsByUserId(userId);
+    res.json(debits);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar débitos do usuário' });
+  }
+}
+
 async function updateDebitById(req, res) {
   try {
     const affectedRows = await debitsModel.updateDebitById(req.params.id, req.body);
@@ -68,5 +79,6 @@ module.exports = {
   createDebit,
   getDebitById,
   updateDebitById,
-  deleteDebitById
+  deleteDebitById,
+  getDebitsByUserId
 };

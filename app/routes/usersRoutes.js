@@ -7,11 +7,13 @@ router.post('/', usersController.createUser);
 router.get('/:id', usersController.getUserById);
 router.put('/:id', usersController.updateUserById);
 router.delete('/:id', usersController.deleteUserById);
+router.get('/:id/categories', usersController.getUserCategories);
+//Criar as rotas                                                      
+// /users/:id/debits
+// /users/:id/credits
+// a ideia é ter os débitos e créditos de um usuario, junte a tabela de debits + users e credits + user, pq quero o userid e o nome dele + lista de credito / debito
 
 module.exports = router;
 
-//     //TODO: 
-//     // 1. criar rotas de GET /users/:id para pegar o usuario pelo id informado - sem body, retornar somente o do id quando encontrado
-//     // 2. criar rotas de PUT /users/:id para atualizar o usuario pelo id informado, com os campos do req.body
-//     // 3. criar rotas de DELETE /users/:id para apagar/excluir/deletar o usuario pelo id informado
+
  

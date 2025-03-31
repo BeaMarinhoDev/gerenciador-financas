@@ -40,6 +40,24 @@ async function getCreditById(id) {
   }
 }
 
+async function getCreditsByUserId(userId) {
+  try {
+    const db = await connection.connect();
+    const [rows] = await db.execute(
+      `SELECT c.*, u.nome AS nome_usuario
+       FROM credits c
+       JOIN users u ON c.user_id = u.id
+       WHERE c.user_id = ?`,
+      [userId]
+    );
+    await db.end();
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 async function updateCreditById(id, credit) {
   try {
     const db = await connection.connect();
@@ -74,4 +92,5 @@ module.exports = {
   getCreditById,
   updateCreditById,
   deleteCreditById,
+  getCreditsByUserId
 };

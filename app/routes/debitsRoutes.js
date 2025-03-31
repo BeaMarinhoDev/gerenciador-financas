@@ -7,5 +7,6 @@ router.post('/', debitsController.createDebit);
 router.get('/:id', debitsController.getDebitById);
 router.put('/:id', debitsController.updateDebitById);
 router.delete('/:id', debitsController.deleteDebitById);
+router.get('/users/:id/debits', debitsController.getDebitsByUserId);
 
 module.exports = router;

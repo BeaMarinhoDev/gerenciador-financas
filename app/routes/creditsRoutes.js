@@ -7,5 +7,6 @@ router.post('/', creditsController.createCredit);
 router.get('/:id', creditsController.getCreditById);
 router.put('/:id', creditsController.updateCreditById);
 router.delete('/:id', creditsController.deleteCreditById);
+router.get('/users/:id/credits', creditsController.getCreditsByUserId);
 
 module.exports = router;
