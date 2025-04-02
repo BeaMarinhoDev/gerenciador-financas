@@ -123,6 +123,31 @@ async function getUserBalance(req, res) {
   }
 }
 
+async function getUserReportsByCategory(req, res) {
+  try {
+    const userId = req.params.id;
+    const categoryId = req.params.categoryId;
+    const reports = await usersModel.getUserReportsByCategory(userId, categoryId);
+    res.json(reports);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar relatórios por categoria' });
+  }
+}
+
+async function getUserReportsByPeriod(req, res) {
+  try {
+    const userId = req.params.id;
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
+    const reports = await usersModel.getUserReportsByPeriod(userId, startDate, endDate);
+    res.json(reports);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar relatórios por período' });
+  }
+}
+
 module.exports = {
   getAllUsers,
   createUser,
@@ -133,6 +158,8 @@ module.exports = {
   getUserDebits,
   getUserCredits,
   getUserTransactions,
-  getUserBalance
+  getUserBalance,
+  getUserReportsByCategory,
+  getUserReportsByPeriod
 };
 

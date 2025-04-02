@@ -12,6 +12,8 @@ router.get('/:id/debits', usersController.getUserDebits);
 router.get('/:id/credits', usersController.getUserCredits);
 router.get('/:id/transactions', usersController.getUserTransactions);
 router.get('/:id/balance', usersController.getUserBalance);
+router.get('/:id/reports/category/:categoryId', usersController.getUserReportsByCategory);
+router.get('/:id/reports/period', usersController.getUserReportsByPeriod);
 
 
 

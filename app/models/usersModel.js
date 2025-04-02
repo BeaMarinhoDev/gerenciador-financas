@@ -127,6 +127,62 @@ async function getUserBalance(userId) {
   }
 }
 
+async function getUserReportsByCategory(userId, categoryId) {
+  try {
+    const db = await connection.connect();
+    const [rows] = await db.execute(
+      `SELECT
+        'débito' AS tipo,
+        d.valor,
+        d.data_vencimento AS data
+      FROM debits d
+      WHERE d.user_id = ? AND d.category_id = ?
+      UNION ALL
+      SELECT
+        'crédito' AS tipo,
+        c.valor,
+        c.data_vencimento AS data
+      FROM credits c
+      WHERE c.user_id = ? AND c.category_id = ?
+      ORDER BY data DESC`,
+      [userId, categoryId, userId, categoryId]
+    );
+    await db.end();
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function getUserReportsByPeriod(userId, startDate, endDate) {
+  try {
+    const db = await connection.connect();
+    const [rows] = await db.execute(
+      `SELECT
+        'débito' AS tipo,
+        d.valor,
+        d.data_vencimento AS data
+      FROM debits d
+      WHERE d.user_id = ? AND d.data_vencimento BETWEEN ? AND ?
+      UNION ALL
+      SELECT
+        'crédito' AS tipo,
+        c.valor,
+        c.data_vencimento AS data
+      FROM credits c
+      WHERE c.user_id = ? AND c.data_vencimento BETWEEN ? AND ?
+      ORDER BY data DESC`,
+      [userId, startDate, endDate, userId, startDate, endDate]
+    );
+    await db.end();
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 module.exports = {
   getAllUsers,
   createUser,
@@ -134,7 +190,9 @@ module.exports = {
   updateUserById,
   deleteUserById,
   getUserCategories,
-  getUserBalance
+  getUserBalance,
+  getUserReportsByCategory,
+  getUserReportsByPeriod
 };
 
 
