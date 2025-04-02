@@ -112,6 +112,16 @@ async function getUserTransactions(req, res) {
   }
 }
 
+async function getUserBalance(req, res) {
+  try {
+    const userId = req.params.id;
+    const balance = await usersModel.getUserBalance(userId);
+    res.json({ balance });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar balanço do usuário' });
+  }
+}
 
 module.exports = {
   getAllUsers,
@@ -122,6 +132,7 @@ module.exports = {
   getUserCategories,
   getUserDebits,
   getUserCredits,
-  getUserTransactions
+  getUserTransactions,
+  getUserBalance
 };
 

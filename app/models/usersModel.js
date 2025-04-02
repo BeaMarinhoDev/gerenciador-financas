@@ -110,13 +110,31 @@ async function getUserCategories(userId) {
   }
 }
 
+async function getUserBalance(userId) {
+  try {
+    const db = await connection.connect();
+    const [rows] = await db.execute(
+      `SELECT
+        (SELECT COALESCE(SUM(valor), 0) FROM credits WHERE user_id = ?) -
+        (SELECT COALESCE(SUM(valor), 0) FROM debits WHERE user_id = ?) AS balance`,
+      [userId, userId]
+    );
+    await db.end();
+    return rows[0].balance;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 module.exports = {
   getAllUsers,
   createUser,
   getUserById,
   updateUserById,
   deleteUserById,
-  getUserCategories
+  getUserCategories,
+  getUserBalance
 };
 
 

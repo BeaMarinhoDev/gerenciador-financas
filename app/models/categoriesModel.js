@@ -34,34 +34,7 @@ async function createCategory(category, userId) {
     throw error;
   }
 }
-    /*async function createCategory(category, userId) {
-      try {
-        const db = await connection.connect();
-        const { nome, descricao, tipo } = category;
-        const [result] = await db.execute(
-          'INSERT INTO categories (nome, descricao, tipo_categoria) VALUES (?, ?, ?)',
-          [nome, descricao, tipo]
-        );
-        const categoryId = result.insertId;
-    
-        await db.execute(
-          'INSERT INTO users_categories (user_id, category_id) VALUES (?, ?)',
-          [userId, categoryId]
-        );
-    
-        await db.end();
-        return categoryId;
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-      
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}*/
+  
 
 async function getCategoriesByUserId(userId) {
   try {
