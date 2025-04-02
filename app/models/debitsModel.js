@@ -85,6 +85,76 @@ async function deleteDebitById(id) {
     throw error;
   }
 }
+async function getDebitsByCategory(categoryId) {
+  try {
+    const db = await connection.connect();
+    const [rows] = await db.execute(
+      `SELECT d.*, c.nome AS nome_categoria
+       FROM debits d
+       JOIN categories c ON d.category_id = c.id
+       WHERE d.category_id = ?`,
+      [categoryId]
+    );
+    await db.end();
+    console.log('Dados retornados do banco de dados:', rows);
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function getDebits(filters, sort) {
+  try {
+    const db = await connection.connect();
+    let query = `SELECT d.*, c.nome AS nome_categoria FROM debits d JOIN categories c ON d.category_id = c.id`;
+    const params = [];
+
+    if (filters) {
+      const filterConditions = [];
+      for (const key in filters) {
+        if (key === 'category_id') {
+          filterConditions.push(`d.${key} = ?`);
+        } else {
+          filterConditions.push(`${key} = ?`);
+        }
+        params.push(filters[key]);
+      }
+      query += ` WHERE ${filterConditions.join(' AND ')}`;
+    }
+
+    if (sort) {
+      query += ` ORDER BY ${sort}`;
+    }
+    console.log('Consulta SQL:', query);
+    console.log('Parâmetros da consulta:', params);
+
+    const [rows] = await db.execute(query, params);
+    await db.end();
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function getDebitsByUserId(userId) {
+  try {
+    const db = await connection.connect();
+    const [rows] = await db.execute(
+      `SELECT d.*, u.nome AS nome_usuario
+       FROM debits d
+       JOIN users u ON d.user_id = u.id
+       WHERE d.user_id = ?`,
+      [userId]
+    );
+    await db.end();
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 
 module.exports = {
   getAllDebits,
@@ -92,5 +162,8 @@ module.exports = {
   getDebitById,
   updateDebitById,
   deleteDebitById,
+  getDebitsByUserId,
+  getDebitsByCategory,
+  getDebits,
   getDebitsByUserId
 };

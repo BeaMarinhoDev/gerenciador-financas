@@ -86,11 +86,61 @@ async function deleteCreditById(id) {
   }
 }
 
+async function getCreditsByCategory(categoryId) {
+  try {
+    const db = await connection.connect();
+    const [rows] = await db.execute(
+      `SELECT c.*, ca.nome AS nome_categoria
+       FROM credits c
+       JOIN categories ca ON c.category_id = ca.id
+       WHERE c.category_id = ?`,
+      [categoryId]
+    );
+    await db.end();
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function getCredits(filters, sort) {
+  try {
+    const db = await connection.connect();
+    let query = `SELECT c.*, ca.nome AS nome_categoria FROM credits c JOIN categories ca ON c.category_id = ca.id`;
+    const params = [];
+
+    if (filters) {
+      const filterConditions = [];
+      for (const key in filters) {
+        filterConditions.push(`${key} = ?`);
+        params.push(filters[key]);
+      }
+      query += ` WHERE ${filterConditions.join(' AND ')}`;
+    }
+
+    if (sort) {
+      query += ` ORDER BY ${sort}`;
+    }
+
+    const [rows] = await db.execute(query, params);
+    await db.end();
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+
 module.exports = {
   getAllCredits,
   createCredit,
   getCreditById,
   updateCreditById,
   deleteCreditById,
-  getCreditsByUserId
+  getCreditsByUserId,
+  getCreditsByCategory,
+  getCredits
 };

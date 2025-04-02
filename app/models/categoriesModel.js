@@ -17,8 +17,8 @@ async function createCategory(category, userId) {
     const db = await connection.connect();
     const { nome, descricao, tipo } = category;
     const [result] = await db.execute(
-      'INSERT INTO categories (nome, descricao, tipo_categoria) VALUES (?, ?, ?)',
-      [nome, descricao, tipo_categoria]
+      'INSERT INTO categories (nome, descricao, tipo) VALUES (?, ?, ?)',
+      [nome, descricao, tipo]
     );
     const categoryId = result.insertId;
 
@@ -86,8 +86,8 @@ async function updateCategoryById(id, category) {
     const db = await connection.connect();
     const { nome, descricao, tipo } = category;
     const [result] = await db.execute(
-      'UPDATE categories SET nome = ?, descricao = ?, tipo_categoria = ? WHERE id = ?',
-      [nome, descricao, tipo_categoria, id]
+      'UPDATE categories SET nome = ?, descricao = ?, tipo = ? WHERE id = ?',
+      [nome, descricao, tipo, id]
     );
     await db.end();
     return result.affectedRows;

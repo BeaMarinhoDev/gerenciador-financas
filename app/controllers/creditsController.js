@@ -74,11 +74,36 @@ async function deleteCreditById(req, res) {
   }
 }
 
+async function getCreditsByCategory(req, res) {
+  try {
+    const categoryId = req.params.categoryId;
+    const credits = await creditsModel.getCreditsByCategory(categoryId);
+    res.json(credits);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar créditos por categoria' });
+  }
+}
+
+async function getCredits(req, res) {
+  try {
+    const filters = req.query;
+    const sort = req.query.sort;
+    const credits = await creditsModel.getCredits(filters, sort);
+    res.json(credits);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar créditos' });
+  }
+}
+
 module.exports = {
   getAllCredits,
   createCredit,
   getCreditById,
   updateCreditById,
   deleteCreditById,
-  getCreditsByUserId
+  getCreditsByUserId,
+  getCreditsByCategory,
+  getCredits
 };

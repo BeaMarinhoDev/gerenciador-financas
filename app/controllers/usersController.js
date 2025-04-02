@@ -1,4 +1,7 @@
 const usersModel = require('../models/usersModel');
+const debitsModel = require('../models/debitsModel');
+const creditsModel = require('../models/creditsModel');
+const transactionsModel = require('../models/transactionsModel');
 
 async function getAllUsers(req, res) {
   try {
@@ -76,12 +79,49 @@ async function getUserCategories(req, res) {
   }
 }
 
+async function getUserDebits(req, res) {
+  try {
+    const userId = req.params.id;
+    const debits = await debitsModel.getDebitsByUserId(userId);
+    res.json(debits);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar débitos do usuário' });
+  }
+}
+
+async function getUserCredits(req, res) {
+  try {
+    const userId = req.params.id;
+    const credits = await creditsModel.getCreditsByUserId(userId);
+    res.json(credits);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar créditos do usuário' });
+  }
+}
+
+async function getUserTransactions(req, res) {
+  try {
+    const userId = req.params.id;
+    const transactions = await transactionsModel.getTransactionsByUserId(userId);
+    res.json(transactions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar transações do usuário' });
+  }
+}
+
+
 module.exports = {
   getAllUsers,
   createUser,
   getUserById,
   updateUserById,
   deleteUserById,
-  getUserCategories
+  getUserCategories,
+  getUserDebits,
+  getUserCredits,
+  getUserTransactions
 };
 

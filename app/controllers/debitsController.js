@@ -74,11 +74,40 @@ async function deleteDebitById(req, res) {
   }
 }
 
+async function getDebitsByCategory(req, res) {
+  try {
+    const categoryId = req.params.categoryId;
+    const debits = await debitsModel.getDebitsByCategory(categoryId);
+    res.json(debits);
+    console.log(debits);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar débitos por categoria' });
+  }
+}
+
+async function getDebits(req, res) {
+  try {
+    const filters = req.query;
+    const sort = req.query.sort;
+    console.log('Filtros recebidos:', filters);
+    console.log('Ordenação recebida:', sort);
+    const debits = await debitsModel.getDebits(filters, sort);
+    res.json(debits);
+    console.log(filters, sort);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensagem: 'Erro ao buscar débitos' });
+  }
+}
+
 module.exports = {
   getAllDebits,
   createDebit,
   getDebitById,
   updateDebitById,
   deleteDebitById,
-  getDebitsByUserId
+  getDebitsByUserId,
+  getDebitsByCategory,
+  getDebits
 };
