@@ -104,7 +104,7 @@ async function getDebitsByCategory(categoryId) {
   }
 }
 
-async function getDebits(filters, sort) {
+async function getDebits(filters, sort, limit, offset) {
   try {
     const db = await connection.connect();
     let query = `SELECT d.*, c.nome AS nome_categoria FROM debits d JOIN categories c ON d.category_id = c.id`;
@@ -126,6 +126,8 @@ async function getDebits(filters, sort) {
     if (sort) {
       query += ` ORDER BY ${sort}`;
     }
+    query += ` LIMIT ? OFFSET ?`;
+    params.push(limit, offset);
     console.log('Consulta SQL:', query);
     console.log('Parâmetros da consulta:', params);
 

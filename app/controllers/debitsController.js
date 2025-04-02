@@ -90,9 +90,9 @@ async function getDebits(req, res) {
   try {
     const filters = req.query;
     const sort = req.query.sort;
-    console.log('Filtros recebidos:', filters);
-    console.log('Ordenação recebida:', sort);
-    const debits = await debitsModel.getDebits(filters, sort);
+    const limit = parseInt(req.query.limit) || 10; 
+    const offset = parseInt(req.query.offset) || 0; 
+    const debits = await debitsModel.getDebits(filters, sort, limit, offset);
     res.json(debits);
     console.log(filters, sort);
   } catch (error) {
