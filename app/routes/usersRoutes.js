@@ -1,7 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const usersController = require('../controllers/usersController');
+const authController = require('../controllers/authController');
+const authenticateToken = require('../middleware/authMiddleware');
 
+
+//Rotas de autenticação
+router.get('/', authenticateToken, usersController.getAllUsers);
+router.get('/:id', authenticateToken, usersController.getUserById);
+router.put('/:id', authenticateToken, usersController.updateUserById);
+router.delete('/:id', authenticateToken, usersController.deleteUserById);
+router.post('/login', authController.login);
+
+// Rotas users, credits e debits
 router.get('/', usersController.getAllUsers);
 router.post('/', usersController.createUser);
 router.get('/:id', usersController.getUserById);

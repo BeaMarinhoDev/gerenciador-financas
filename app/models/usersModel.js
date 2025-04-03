@@ -1,4 +1,5 @@
 const connection = require('../config/db/db');
+const bcrypt = require('bcryptjs');
 
 async function getAllUsers() {
   try {
@@ -26,25 +27,46 @@ async function createUser(user) {
 
     if (existingUser.length > 0) {
       await db.end();
-      throw new Error('E-mail já cadastrado'); // Lança um erro se o e-mail já existir
-    }
-
-
+      throw new Error('E-mail já cadastrado');
+    }  
+    
     const { nome, email, senha, cpf, cep, numero, complemento } = user;
+    const hashedPassword = await bcrypt.hash(senha, 10);
+
     const [result] = await db.execute(
       'INSERT INTO users (nome, email, senha, cpf, cep, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [nome, email, senha, cpf, cep, numero, complemento]
+      [nome, email, hashedPassword, cpf, cep, numero, complemento]
     );
-
     console.log('Query Result:', result);
-
-    // Close the connection
     await db.end();
-
     return result.insertId;
   } catch (err) {
     console.error('Error:', err);
     throw err;
+  }
+}
+
+async function loginUser(email, senha) {
+  try {
+    const db = await connection.connect();
+    const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+    await db.end();
+
+    if (rows.length === 0) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    const user = rows[0];
+    const passwordMatch = await bcrypt.compare(senha, user.senha);
+
+    if (!passwordMatch) {
+      throw new Error('Senha incorreta');
+    }
+
+    return user;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
 
@@ -192,7 +214,8 @@ module.exports = {
   getUserCategories,
   getUserBalance,
   getUserReportsByCategory,
-  getUserReportsByPeriod
+  getUserReportsByPeriod,
+  loginUser
 };
 
 
