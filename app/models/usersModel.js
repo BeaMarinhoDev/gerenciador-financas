@@ -59,6 +59,9 @@ async function loginUser(email, senha) {
     const user = rows[0];
     const passwordMatch = await bcrypt.compare(senha, user.senha);
 
+    //TODO: Caso precise testar uma senha criptografada
+    //console.log('Password:', await bcrypt.hash(senha, 10));
+
     if (!passwordMatch) {
       throw new Error('Senha incorreta');
     }
