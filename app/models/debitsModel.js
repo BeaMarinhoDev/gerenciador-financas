@@ -40,23 +40,6 @@ async function getDebitById(id) {
     throw error;
   }
 }
-async function getDebitsByUserId(userId) {
-  try {
-    const db = await connection.connect();
-    const [rows] = await db.execute(
-      `SELECT d.*, u.nome AS nome_usuario
-       FROM debits d
-       JOIN users u ON d.user_id = u.id
-       WHERE d.user_id = ?`,
-      [userId]
-    );
-    await db.end();
-    return rows;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
 
 async function updateDebitById(id, debit) {
   try {
