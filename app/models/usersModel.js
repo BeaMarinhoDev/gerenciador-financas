@@ -207,6 +207,17 @@ async function getUserReportsByPeriod(userId, startDate, endDate) {
     throw error;
   }
 }
+async function getUserByEmail(email) {
+  try {
+      const db = await connection.connect();
+      const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+      await db.end();
+      return rows[0]; // Retorna o primeiro usuário encontrado ou undefined
+  } catch (err) {
+      console.error('Erro ao buscar usuário por e-mail:', err);
+      throw err;
+  }
+}
 
 module.exports = {
   getAllUsers,
@@ -218,7 +229,8 @@ module.exports = {
   getUserBalance,
   getUserReportsByCategory,
   getUserReportsByPeriod,
-  loginUser
+  loginUser,
+  getUserByEmail
 };
 
 

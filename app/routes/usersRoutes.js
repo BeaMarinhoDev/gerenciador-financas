@@ -12,6 +12,9 @@ router.put('/:id', authenticateToken, usersController.updateUserById);
 router.delete('/:id', authenticateToken, usersController.deleteUserById);
 router.post('/login', authController.login);
 
+
+
+
 // Rotas users, credits e debits
 router.get('/', usersController.getAllUsers);
 router.post('/', usersController.createUser);
@@ -25,9 +28,7 @@ router.get('/:id/transactions', usersController.getUserTransactions);
 router.get('/:id/balance', usersController.getUserBalance);
 router.get('/:id/reports/category/:categoryId', usersController.getUserReportsByCategory);
 router.get('/:id/reports/period', usersController.getUserReportsByPeriod);
-
-
-
+router.post('/login', usersController.loginUser);
 
 //Criar as rotas                                                      
 // /users/:id/debits
@@ -36,6 +37,3 @@ router.get('/:id/reports/period', usersController.getUserReportsByPeriod);
 // junte a tabela de debits + users e credits + user, pq quero o userid e o nome dele + lista de credito / debito
 
 module.exports = router;
-
-
- 

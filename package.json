@@ -10,10 +10,12 @@
     },
     "dependencies": {
         "bcryptjs": "^3.0.2",
+        "chalk": "^4.1.2",
         "consign": "^0.1.6",
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
         "express": "^4.21.2",
+        "express-session": "^1.18.1",
         "jsonwebtoken": "^9.0.2",
         "mysql": "^2.18.1",
         "mysql-promise": "^5.0.0",
@@ -25,6 +27,8 @@
         "supertest": "^7.1.0"
     },
     "jest": {
-        "setupFiles": ["./app/__tests__/testSetup"]
+        "setupFiles": [
+            "./app/__tests__/testSetup"
+        ]
     }
 }

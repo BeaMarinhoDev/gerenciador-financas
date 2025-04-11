@@ -147,6 +147,29 @@ async function getUserReportsByPeriod(req, res) {
     res.status(500).json({ mensagem: 'Erro ao buscar relatórios por período' });
   }
 }
+async function loginUser(req, res) {
+  const { email, senha } = req.body;
+
+  try {
+      const user = await usersModel.getUserByEmail(email);
+
+      if (user) {
+          const senhaCorreta = await bcrypt.compare(senha, user.senha);
+
+          if (senhaCorreta) {
+              // Criar sessão (exemplo usando express-session - lembre-se de configurar no app.js)
+              req.session.userId = user.id;
+              return res.status(200).json({ success: true });
+          }
+      }
+
+      return res.status(401).json({ success: false, message: 'Credenciais inválidas.' });
+
+  } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      return res.status(500).json({ success: false, message: 'Erro interno do servidor.' });
+  }
+}
 
 module.exports = {
   getAllUsers,
@@ -160,6 +183,7 @@ module.exports = {
   getUserTransactions,
   getUserBalance,
   getUserReportsByCategory,
-  getUserReportsByPeriod
+  getUserReportsByPeriod,
+  loginUser
 };
 
