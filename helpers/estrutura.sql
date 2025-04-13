@@ -1,5 +1,6 @@
-//TODO - colocar estrutura do banco e tabelas
 CREATE DATABASE `gerenciador_financas` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `gerenciador_financas`;
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,7 +41,7 @@ CREATE TABLE `debits` (
   `category_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `credits` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
