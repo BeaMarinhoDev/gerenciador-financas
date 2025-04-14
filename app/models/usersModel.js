@@ -96,9 +96,11 @@ async function updateUserById(id, user) {
   try {
     const db = await connection.connect();
     const { nome, email, senha, cpf, cep, numero, complemento } = user;
+    const hashedPassword = await bcrypt.hash(senha, 10);
+
     const [result] = await db.execute(
       'UPDATE users SET nome = ?, email = ?, senha = ?, cpf = ?, cep = ?, numero = ?, complemento = ? WHERE id = ?',
-      [nome, email, senha, cpf, cep, numero, complemento, id]
+      [nome, email, hashedPassword, cpf, cep, numero, complemento, id]
     );
     await db.end();
     return result.affectedRows; // Retorna o número de linhas afetadas
