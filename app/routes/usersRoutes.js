@@ -3,6 +3,8 @@ const router = express.Router();
 const usersController = require('../controllers/usersController');
 const authController = require('../controllers/authController');
 const authenticateToken = require('../middleware/authMiddleware');
+const transactionsController = require('../controllers/transactionsController');
+const usersModel = require('../models/usersModel');
 
 
 //Rotas de autenticação
@@ -25,10 +27,18 @@ router.get('/:id/categories', usersController.getUserCategories);
 router.get('/:id/debits', usersController.getUserDebits);
 router.get('/:id/credits', usersController.getUserCredits);
 router.get('/:id/transactions', usersController.getUserTransactions);
+router.get('/transactions/recent', transactionsController.getRecentTransactions);
 router.get('/:id/balance', usersController.getUserBalance);
 router.get('/:id/reports/category/:categoryId', usersController.getUserReportsByCategory);
 router.get('/:id/reports/period', usersController.getUserReportsByPeriod);
 router.post('/login', usersController.loginUser);
+router.get('/user', usersController.getUserData);
+router.get('/:id/transactions/recent', transactionsController.getRecentTransactions);
+
+// Dentro de usersRoutes.js
+console.log('Diretório de usersRoutes:', __dirname);
+const transactionsControllerPath = require.resolve('../controllers/transactionsController');
+console.log('Caminho resolvido para transactionsController:', transactionsControllerPath);
 
 //Criar as rotas                                                      
 // /users/:id/debits

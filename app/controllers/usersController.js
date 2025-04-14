@@ -170,6 +170,23 @@ async function loginUser(req, res) {
       return res.status(500).json({ success: false, message: 'Erro interno do servidor.' });
   }
 }
+async function getUserData(req, res) {
+  if (req.session.userId) {
+      try {
+          const user = await usersModel.getUserById(req.session.userId);
+          if (user) {
+              return res.json({ nome: user.nome });
+          } else {
+              return res.status(404).json({ message: 'Usuário não encontrado.' });
+          }
+      } catch (error) {
+          console.error('Erro ao buscar dados do usuário:', error);
+          return res.status(500).json({ message: 'Erro interno do servidor.' });
+      }
+  } else {
+      return res.status(401).json({ message: 'Usuário não autenticado.' });
+  }
+}
 
 module.exports = {
   getAllUsers,
@@ -184,6 +201,7 @@ module.exports = {
   getUserBalance,
   getUserReportsByCategory,
   getUserReportsByPeriod,
-  loginUser
+  loginUser,
+  getUserData
 };
 

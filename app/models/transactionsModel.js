@@ -28,6 +28,21 @@ async function getTransactionsByUserId(userId) {
   }
 }
 
+getRecentTransactionss = async (req, res) => {
+  if (req.session.userId) {
+    try {
+      const userId = req.session.userId;
+      const recentTransactions = await getTransactionsByUserId(userId);
+      return res.json(recentTransactions);
+    } catch (error) {
+      console.error('Erro ao buscar transações recentes:', error);
+      return res.status(500).json({ message: 'Erro ao buscar histórico de transações.' });
+    }
+  } else {
+    return res.status(401).json({ message: 'Usuário não autenticado.' });
+  }
+};  
+
 module.exports = {
   getTransactionsByUserId,
 };
