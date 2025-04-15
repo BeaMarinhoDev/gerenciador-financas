@@ -1,7 +1,7 @@
 const transactionsModel = require('../models/transactionsModel'); // Vamos criar este model
 
 async function getRecentTransactions(req, res) {
-    const userId = req.params.id;
+    const userId = req.user.id;
 
     if (userId) {
         try {

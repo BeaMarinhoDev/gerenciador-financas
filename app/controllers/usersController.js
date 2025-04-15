@@ -69,7 +69,7 @@ async function deleteUserById(req, res) {
 }
 async function getUserCategories(req, res) {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const categories = await usersModel.getUserCategories(userId);
     console.log('Categories:', categories);
     res.json(categories);
@@ -81,7 +81,7 @@ async function getUserCategories(req, res) {
 
 async function getUserDebits(req, res) {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const debits = await debitsModel.getDebitsByUserId(userId);
     res.json(debits);
   } catch (error) {
@@ -92,7 +92,7 @@ async function getUserDebits(req, res) {
 
 async function getUserCredits(req, res) {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const credits = await creditsModel.getCreditsByUserId(userId);
     res.json(credits);
   } catch (error) {
@@ -103,18 +103,19 @@ async function getUserCredits(req, res) {
 
 async function getUserTransactions(req, res) {
   try {
-    const userId = req.params.id;
-    const transactions = await transactionsModel.getTransactionsByUserId(userId);
-    res.json(transactions);
+      const userId = req.user.id; // Pega o ID do usuário autenticado do token
+      console.log('User ID:', userId); // Log para verificar o ID do usuário
+      const transactions = await transactionsModel.getTransactionsByUserId(userId);
+      res.json(transactions);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensagem: 'Erro ao buscar transações do usuário' });
+      console.error(error);
+      res.status(500).json({ mensagem: 'Erro ao buscar transações do usuário' });
   }
 }
 
 async function getUserBalance(req, res) {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const balance = await usersModel.getUserBalance(userId);
     res.json({ balance });
   } catch (error) {
@@ -125,7 +126,7 @@ async function getUserBalance(req, res) {
 
 async function getUserReportsByCategory(req, res) {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const categoryId = req.params.categoryId;
     const reports = await usersModel.getUserReportsByCategory(userId, categoryId);
     res.json(reports);
@@ -137,7 +138,7 @@ async function getUserReportsByCategory(req, res) {
 
 async function getUserReportsByPeriod(req, res) {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const startDate = req.query.startDate;
     const endDate = req.query.endDate;
     const reports = await usersModel.getUserReportsByPeriod(userId, startDate, endDate);
@@ -157,8 +158,7 @@ async function loginUser(req, res) {
           const senhaCorreta = await bcrypt.compare(senha, user.senha);
 
           if (senhaCorreta) {
-              // Criar sessão (exemplo usando express-session - lembre-se de configurar no app.js)
-              req.session.userId = user.id;
+                     
               return res.status(200).json({ success: true });
           }
       }
@@ -171,20 +171,19 @@ async function loginUser(req, res) {
   }
 }
 async function getUserData(req, res) {
-  if (req.session.userId) {
-      try {
-          const user = await usersModel.getUserById(req.session.userId);
-          if (user) {
-              return res.json({ nome: user.nome });
-          } else {
-              return res.status(404).json({ message: 'Usuário não encontrado.' });
-          }
-      } catch (error) {
-          console.error('Erro ao buscar dados do usuário:', error);
-          return res.status(500).json({ message: 'Erro interno do servidor.' });
+  try {
+      // O middleware authenticateToken já colocou as informações do usuário decodificadas do token em req.user
+      const userId = req.user.id;
+      const user = await usersModel.getUserById(userId);
+
+      if (user) {
+          return res.json({ nome: user.nome });
+      } else {
+          return res.status(404).json({ message: 'Usuário não encontrado.' });
       }
-  } else {
-      return res.status(401).json({ message: 'Usuário não autenticado.' });
+  } catch (error) {
+      console.error('Erro ao buscar dados do usuário:', error);
+      return res.status(500).json({ message: 'Erro interno do servidor.' });
   }
 }
 

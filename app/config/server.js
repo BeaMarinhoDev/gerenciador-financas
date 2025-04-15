@@ -1,6 +1,6 @@
 const express = require('express');
 //const consign = require('consign');
-const session = require('express-session');
+
 const cors = require('cors');
 //const path = require('path');
 const usersRoutes = require('../routes/usersRoutes');
@@ -18,17 +18,7 @@ app.use(cors({
 
 app.options('*', cors()) 
 
-app.use(session({
-    secret: 'JWT_SECRET', // Chave secreta para assinar o cookie de sessão (mantenha segura!)
-    resave: false, // Não salva a sessão novamente se nada mudou
-    saveUninitialized: true, // Salva sessões novas, mas não modificadas
-    cookie: {
-        secure: false, // Defina como true em produção se estiver usando HTTPS
-        httpOnly: true, // Impede que JavaScript do lado do cliente acesse o cookie
-        maxAge: 3600000 // Tempo de vida do cookie em milissegundos (ex: 1 hora)
-    }
 
-}));
 
 app.use('/users', usersRoutes);
 app.use('/categories', categoriesRoutes);

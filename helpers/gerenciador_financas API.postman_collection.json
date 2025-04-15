@@ -28,6 +28,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzQ0NzU4ODIzLCJleHAiOjE3NDQ3NjI0MjN9.wlq6p1G8x7szI7veZT_PS4Ip2A4rh0l_e8N3EzTwBMs",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -40,7 +50,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users/:id",
+							"raw": "http://localhost:3000/users/7",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -48,13 +58,7 @@
 							"port": "3000",
 							"path": [
 								"users",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "7"
-								}
+								"7"
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -174,6 +178,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzQ0NzU4ODIzLCJleHAiOjE3NDQ3NjI0MjN9.wlq6p1G8x7szI7veZT_PS4Ip2A4rh0l_e8N3EzTwBMs",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -218,6 +232,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzQ0NzU4ODIzLCJleHAiOjE3NDQ3NjI0MjN9.wlq6p1G8x7szI7veZT_PS4Ip2A4rh0l_e8N3EzTwBMs",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -234,8 +258,53 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": ""
+									"value": "8"
 								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "getUser Categories",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzQ0NzU4ODIzLCJleHAiOjE3NDQ3NjI0MjN9.wlq6p1G8x7szI7veZT_PS4Ip2A4rh0l_e8N3EzTwBMs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"categories"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -273,7 +342,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": 8,\r\n    \"nome\": \"Parcela do AP\",\r\n    \"descricao\": \"Moradia\",\r\n    \"tipo\": \"D\"\r\n}",
+							"raw": "{\r\n  \"userId\": 8,\r\n  \"nome\": \"Presente\",\r\n  \"descricao\": \"verba inesperada\",\r\n  \"tipo\": \"C\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -313,7 +382,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "14"
+									"value": "17"
 								}
 							]
 						}
@@ -327,7 +396,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 2,\r\n    \"nome\": \"MaryJane\",\r\n    \"descricao\": \"Relaxamento\",\r\n    \"tipo\": \"D\"\r\n}",
+							"raw": "{\r\n    \"id\": 3,\r\n    \"nome\": \"Role com amigos\",\r\n    \"descricao\": \"Lazer\",\r\n    \"tipo\": \"D\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -411,20 +480,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/debits?id=8",
+							"raw": "http://localhost:3000/debits/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
-								"debits"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "8"
-								}
+								"debits",
+								"6"
 							]
 						}
 					},
@@ -456,7 +520,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"valor\": 87864.00,\r\n    \"data_vencimento\": \"2025-04-15\",\r\n    \"descricao\": \"saiu caro pq deu certo!!...hahaha\",\r\n    \"category_id\": 3,\r\n    \"user_id\": 7\r\n}",
+							"raw": "{\r\n    \"valor\": 400,\r\n    \"data_vencimento\": \"2025-04-15\",\r\n    \"descricao\": \"JANTAR COM OS AMIGOS\",\r\n    \"category_id\": 16,\r\n    \"user_id\": 8\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -511,6 +575,79 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "filtro de debito",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/debits/filtered?category_id=16",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"debits",
+								"filtered"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "16"
+								},
+								{
+									"key": "valor",
+									"value": "1200",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users debits",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzQ0NzU4ODIzLCJleHAiOjE3NDQ3NjI0MjN9.wlq6p1G8x7szI7veZT_PS4Ip2A4rh0l_e8N3EzTwBMs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/debits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"debits"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -543,7 +680,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"valor\": 50,\r\n    \"data_vencimento\": \"2025-04-02\",\r\n    \"descricao\": \"Premiação\",\r\n    \"category_id\": 1,\r\n    \"user_id\": 7\r\n}",
+							"raw": "{\r\n    \"valor\": 330,\r\n    \"data_vencimento\": \"2025-04-15\",\r\n    \"descricao\": \"achei dinheiro\",\r\n    \"category_id\": 6,\r\n    \"user_id\": 8\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -602,6 +739,39 @@
 					"response": []
 				},
 				{
+					"name": "users credits",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/8/credits",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"8",
+								"credits"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "updateCreditById",
 					"request": {
 						"method": "PUT",
@@ -645,6 +815,354 @@
 							"path": [
 								"credits",
 								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "UserCategories",
+			"item": []
+		},
+		{
+			"name": "Balance",
+			"item": [
+				{
+					"name": "Balance user_7",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzQ0NzU4ODIzLCJleHAiOjE3NDQ3NjI0MjN9.wlq6p1G8x7szI7veZT_PS4Ip2A4rh0l_e8N3EzTwBMs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/7/balance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"7",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Balance user_8",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/8/balance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"8",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "todas as transações",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzQ0NzU4ODIzLCJleHAiOjE3NDQ3NjI0MjN9.wlq6p1G8x7szI7veZT_PS4Ip2A4rh0l_e8N3EzTwBMs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "userReportsCategory",
+			"item": [
+				{
+					"name": "userReportsCategory7",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/7/reports/category/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"7",
+								"reports",
+								"category",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userReportsCategory8",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/8/reports/period?startDate=2025-04-02&endDate=2025-04-02",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"8",
+								"reports",
+								"period"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-04-02"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-04-02"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DebitsLimit",
+			"item": [
+				{
+					"name": "DebitsLimitoffset",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/debits?limit=1&offset=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"debits"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "1"
+								},
+								{
+									"key": "offset",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DebitsLimitSort",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/debits?sort=valor DESC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"debits"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "valor DESC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "userReportsPeriod",
+			"item": [
+				{
+					"name": "userReportsPeriod",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/7/reports/period?startDate=2025-04-02&endDate=2025-04-02",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"7",
+								"reports",
+								"period"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-04-02"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-04-02"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login",
+			"item": [
+				{
+					"name": "logusers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"k_beatrizmlc@hotmail.com\",\r\n    \"senha\":\"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getRecentTransactions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiaWF0IjoxNzQ0NTk2MTYxLCJleHAiOjE3NDQ1OTk3NjF9.IiRk5mvnh_D8jIwWLFwz-Bmjx_Fgi9cz-mV9BFpETiQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/users/7/transactions/recent",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"users",
+								"7",
+								"transactions",
+								"recent"
 							]
 						}
 					},
