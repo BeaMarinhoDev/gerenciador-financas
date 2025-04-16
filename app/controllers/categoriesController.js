@@ -29,7 +29,7 @@ async function createCategory(req, res) {
 
 async function getCategoryById(req, res) {
   try {
-    const categoryId = req.params.id;
+    const categoryId = req.user.id;
     const category = await categoriesModel.getCategoryById(categoryId);
     if (category) {
       res.json(category);

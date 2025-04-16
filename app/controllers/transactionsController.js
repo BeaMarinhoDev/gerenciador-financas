@@ -1,3 +1,48 @@
+// transactionsModel.js
+const db = require('../config/db/db'); // Conexão com o banco de dados
+
+async function getTransactionsByUserId(userId) {
+    try {
+        const [rows] = await db.execute(`
+            SELECT
+                id,
+                valor,
+                tipo,
+                DATE_FORMAT(data, '%d/%m/%Y') AS data, -- Formata a data para DD/MM/YYYY
+                descricao,
+                categoria_id,
+                categoria_nome
+            FROM
+                (SELECT
+                    t.id,
+                    t.valor,
+                    t.tipo,
+                    t.data,
+                    t.descricao,
+                    t.categoria_id,
+                    c.nome AS categoria_nome
+                FROM
+                    transactions t
+                LEFT JOIN
+                    categories c ON t.categoria_id = c.id
+                WHERE
+                    t.user_id = ?
+                ORDER BY
+                    t.data DESC
+                LIMIT 5) AS subquery
+            ORDER BY
+                data DESC;
+        `, [userId]);
+        return rows;
+    } catch (error) {
+        console.error('Erro ao buscar transações recentes:', error);
+        throw error;
+    }
+}
+
+
+
+
 const transactionsModel = require('../models/transactionsModel'); // Vamos criar este model
 
 async function getRecentTransactions(req, res) {
@@ -18,4 +63,5 @@ async function getRecentTransactions(req, res) {
 
 module.exports = {
     getRecentTransactions,
+    getTransactionsByUserId
 };
