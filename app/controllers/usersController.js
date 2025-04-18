@@ -29,7 +29,7 @@ async function createUser(req, res) {
 
 async function getUserById(req, res) {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const user = await usersModel.getUserById(userId);
     
     if (user !== null)

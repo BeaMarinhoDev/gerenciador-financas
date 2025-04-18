@@ -69,6 +69,9 @@ async function deleteCategoryById(req, res) {
     res.status(500).json({ mensagem: 'Erro ao excluir categoria' });
   }
 }
+async function get(params) {
+  
+}
 
 module.exports = {
   getAllCategories,

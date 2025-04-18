@@ -6,7 +6,7 @@ const authenticateToken = require('../middleware/authMiddleware');
 const transactionsController = require('../controllers/transactionsController');
 const usersModel = require('../models/usersModel');
 
-// Rotas de autenticação (sem autenticação)
+// Rotas de autenticação
 router.post('/login', authController.login); // Ou usersController.loginUser, dependendo de onde está a lógica final de login
 
 router.get('/transactions', authenticateToken, usersController.getUserTransactions);
@@ -17,6 +17,9 @@ router.get('/reports/category/:categoryId', authenticateToken, usersController.g
 router.get('/reports/period', authenticateToken, usersController.getUserReportsByPeriod);
 router.get('/balance', authenticateToken, usersController.getUserBalance);
 router.get('/transactions/recent', authenticateToken, transactionsController.getRecentTransactions);
+router.post('/transactions/credit', authenticateToken, transactionsController.addCredit);
+router.post('/transactions/debit', authenticateToken, transactionsController.addDebit);
+
 
 router.get('/user', authenticateToken, usersController.getUserData);
 

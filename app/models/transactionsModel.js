@@ -37,25 +37,40 @@ async function getTransactionsByUserId(userId) {
       throw error;
   }
 }
-
-
-
-/*getRecentTransactions = async (req, res) => {
-  if (req.user.userId) {
-    try {
-      const userId = req.user.userId;
-      const recentTransactions = await getTransactionsByUserId(userId);
-      return res.json(recentTransactions);
-    } catch (error) {
-      console.error('Erro ao buscar transações recentes:', error);
-      return res.status(500).json({ message: 'Erro ao buscar histórico de transações.' });
-    }
-  } else {
-    return res.status(401).json({ message: 'Usuário não autenticado.' });
+class Transaction {
+  constructor(data) {
+      this.tipo = data.tipo;
+      this.valor = data.valor;
+      this.descricao = data.descricao;
+      this.data = data.data;
+      this.categoria_id = 19;//data.categoria_id;
+      this.user_id = data.user_id;
   }
-};  
-*/
+
+  async save() {
+      try {
+          const db = await connection.connect(); // Obtém a conexão aqui
+          const [result] = await db.execute(`
+              INSERT INTO transactions (tipo, valor, data, descricao, categoria_id, user_id)
+              VALUES (?, ?, ?, ?, ?, ?)
+          `, [this.tipo, this.valor, this.data, this.descricao, this.categoria_id, this.user_id]); // Use 'this.data' para data_vencimento
+          this.id = result.insertId;
+          await db.end(); // Libera a conexão após a inserção
+          return this;
+      } catch (error) {
+          console.error('Erro ao salvar transação:', error);
+          throw error;
+      }
+  }
+
+}
+
+
+
+
+
 module.exports = {
   getTransactionsByUserId,
+  Transaction,
   
 };
