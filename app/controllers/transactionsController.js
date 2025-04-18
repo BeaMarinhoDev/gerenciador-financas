@@ -1,5 +1,3 @@
-// transactionsModel.js
-const connection = require('../config/db/db');
 const transactionsModel = require('../models/transactionsModel');
 
 const transactionController = {
@@ -22,7 +20,6 @@ const transactionController = {
     async addCredit(req, res) {
      
         try {
-            const db = await connection.connect();
             const { valor, descricao, data_vencimento, category_id } = req.body;
             const user_id = req.user.id; // Obtido do middleware de autenticação
 
@@ -51,7 +48,6 @@ const transactionController = {
 
     async addDebit(req, res) {
         try {
-            const db = await connection.connect();
             const { valor, descricao, data_vencimento } = req.body; // Removed user_id from destructuring
             const user_id = req.user.id; // Obtido do middleware de autenticação
 

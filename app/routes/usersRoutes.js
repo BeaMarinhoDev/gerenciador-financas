@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const usersController = require('../controllers/usersController');
-const authController = require('../controllers/authController');
-const authenticateToken = require('../middleware/authMiddleware');
-const transactionsController = require('../controllers/transactionsController');
-const usersModel = require('../models/usersModel');
 
-// Rotas de autenticação
-router.post('/login', authController.login); // Ou usersController.loginUser, dependendo de onde está a lógica final de login
+const authenticateToken = require('../middleware/authMiddleware');
+
+const usersController = require('../controllers/usersController');
+const transactionsController = require('../controllers/transactionsController');
 
 router.get('/transactions', authenticateToken, usersController.getUserTransactions);
 router.get('/categories', authenticateToken, usersController.getUserCategories);
@@ -20,12 +17,11 @@ router.get('/transactions/recent', authenticateToken, transactionsController.get
 router.post('/transactions/credit', authenticateToken, transactionsController.addCredit);
 router.post('/transactions/debit', authenticateToken, transactionsController.addDebit);
 
-
 router.get('/user', authenticateToken, usersController.getUserData);
 
 // Rotas de usuários (protegidas por autenticação)
 router.get('/', authenticateToken, usersController.getAllUsers);
-router.post('/', usersController.createUser); // Decida se a criação requer autenticação ou não
+router.post('/', authenticateToken, usersController.createUser);
 router.get('/:id', authenticateToken, usersController.getUserById);
 router.put('/:id', authenticateToken, usersController.updateUserById);
 router.delete('/:id', authenticateToken, usersController.deleteUserById);

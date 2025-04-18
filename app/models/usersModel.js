@@ -21,24 +21,32 @@ async function getAllUsers() {
 
 async function createUser(user) {
   try {
+    const { nome, email, senha, cpf, cep, numero, complemento } = user;
+    const emailCleaned = email.trim(); // Remove espaços em branco do e-mail
+    const nomeCleaned = nome.trim(); // Remove espaços em branco do nome
+    const hashedPassword = await bcrypt.hash(senha, 10);
+    const cpfCleaned = cpf.replace(/\D/g, ''); // Remove caracteres não numéricos do CPF
+    const cepCleaned = cep.replace(/\D/g, ''); // Remove caracteres não numéricos do CEP
+    const numeroCleaned = numero.replace(/\D/g, ''); // Remove caracteres não numéricos do número
+    const complementoCleaned = complemento ? complemento.trim() : null; // Remove espaços em branco do complemento, se existir
+
     // Execute a query using promise
     const db = await connection.connect();
-    const [existingUser] = await db.execute('SELECT * FROM users WHERE email = ?', [user.email]);
 
+    const [existingUser] = await db.execute('SELECT * FROM users WHERE email = ?', [emailCleaned]);
     if (existingUser.length > 0) {
       await db.end();
       throw new Error('E-mail já cadastrado');
     }  
-    
-    const { nome, email, senha, cpf, cep, numero, complemento } = user;
-    const hashedPassword = await bcrypt.hash(senha, 10);
 
     const [result] = await db.execute(
       'INSERT INTO users (nome, email, senha, cpf, cep, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [nome, email, hashedPassword, cpf, cep, numero, complemento]
+      [nomeCleaned, emailCleaned, hashedPassword, cpfCleaned, cepCleaned, numeroCleaned, complementoCleaned]
     );
+    
     console.log('Query Result:', result);
     await db.end();
+    
     return result.insertId;
   } catch (err) {
     console.error('Error:', err);
