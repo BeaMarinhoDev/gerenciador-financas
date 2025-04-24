@@ -48,7 +48,7 @@ const transactionController = {
 
     async addDebit(req, res) {
         try {
-            const { valor, descricao, data_vencimento } = req.body; // Removed user_id from destructuring
+            const { valor, descricao, data_vencimento, category_id } = req.body; // Removed user_id from destructuring
             const user_id = req.user.id; // Obtido do middleware de autenticação
 
             // Validação dos dados

@@ -30,7 +30,7 @@ const usersControllers = {
 
   async getUserById(req, res) {
     try {
-      const userId = req.user.id;
+      const userId = req.params.id;
       const user = await usersModel.getUserById(userId);
 
       if (user !== null)
@@ -72,14 +72,16 @@ const usersControllers = {
   },
 
   async getUserCategories(req, res) {
+    
     try {
-      const userId = req.user.id;
-      const categories = await usersModel.getUserCategories(userId);
-      console.log('Categories:', categories);
-      res.json(categories);
+      const userId = req.user.id; // Pega o ID do usuário autenticado do token
+      const debitCategories = await transactionsModel.getUserCategoriesByType(userId, 'debito');
+      const creditCategories = await transactionsModel.getUserCategoriesByType(userId, 'credito');
+
+      return res.status(200).json({ debit: debitCategories, credit: creditCategories });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ mensagem: 'Erro ao buscar categorias do usuário' });
+      console.error('Erro ao buscar categorias do usuário:', error);
+      return res.status(500).json({ message: 'Erro ao buscar categorias do usuário.' });
     }
   },
 
@@ -153,30 +155,7 @@ const usersControllers = {
     }
   },
 
-  async loginUser(req, res) {
-    const { email, senha } = req.body;
-
-    try {
-      const user = await usersModel.getUserByEmail(email);
-
-      if (user) {
-        const senhaCorreta = await bcrypt.compare(senha, user.senha);
-
-        if (senhaCorreta) {
-
-          return res.status(200).json({ success: true });
-        }
-      }
-
-      return res.status(401).json({ success: false, message: 'Credenciais inválidas.' });
-
-    } catch (error) {
-      console.error('Erro ao fazer login:', error);
-      return res.status(500).json({ success: false, message: 'Erro interno do servidor.' });
-    }
-  },
-
-  async getUserData(req, res) {
+async getUserData(req, res) {
     try {
       // O middleware authenticateToken já colocou as informações do usuário decodificadas do token em req.user
       const userId = req.user.id;
@@ -208,7 +187,6 @@ module.exports = {
   getUserBalance: usersControllers.getUserBalance,
   getUserReportsByCategory: usersControllers.getUserReportsByCategory,
   getUserReportsByPeriod: usersControllers.getUserReportsByPeriod,
-  loginUser: usersControllers.loginUser,
   getUserData: usersControllers.getUserData
 };
 

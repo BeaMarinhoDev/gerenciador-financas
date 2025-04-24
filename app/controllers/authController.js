@@ -35,8 +35,12 @@ const authController = {
     },
 
     async logout(req, res) {
-        // Implementar lógica de logout se necessário
-        res.status(200).json({ mensagem: 'Logout realizado com sucesso' });
+        try {
+            res.status(200).json({ mensagem: 'Logout realizado com sucesso' });
+        } catch (error) {
+            console.error('Erro ao realizar logout:', error);
+            res.status(500).json({ mensagem: 'Erro interno ao realizar logout' });
+        }
     },
 
     async register(req, res) {
