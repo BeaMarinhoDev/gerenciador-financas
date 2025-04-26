@@ -5,30 +5,32 @@ async function getTransactionsByUserId(userId) {
         const db = await connection.connect();
         const [rows] = await db.execute(`
           SELECT
-              id,
-              valor,
-              'debito' AS tipo, -- Adiciona o tipo para identificar a origem
-              DATE_FORMAT(data_vencimento, '%d/%m/%Y') AS data,
-              descricao,
-              category_id,
-              user_id
-          FROM
-              debits
-          WHERE
-              user_id = ?
-          UNION ALL
-          SELECT
-              id,
-              valor,
-              'credito' AS tipo, -- Adiciona o tipo para identificar a origem
-              DATE_FORMAT(data_vencimento, '%d/%m/%Y') AS data,
-              descricao,
-              category_id,
-              user_id
-          FROM
-              credits
-          WHERE
-              user_id = ?
+    id,
+    valor,
+    'debito' AS tipo,
+    data_vencimento AS data,  -- formato natural YYYY-MM-DD
+    descricao,
+    category_id,
+    user_id
+FROM
+    debits
+WHERE
+    user_id = ?
+
+UNION ALL
+
+SELECT
+    id,
+    valor,
+    'credito' AS tipo,
+    data_vencimento AS data,
+    descricao,
+    category_id,
+    user_id
+FROM
+    credits
+WHERE
+    user_id = ?
       `, [userId, userId]);
         await db.end();
         return rows;
@@ -63,7 +65,7 @@ class Transaction {
         }
     }
 }
-    async function getUserCategoriesByType(userId, tipo) {
+async function getUserCategoriesByType(userId, tipo) {
     try {
         const db = await connection.connect();
         const [rows] = await db.execute('SELECT id, descricao FROM categories WHERE user_id = ? AND tipo = ?', [userId, tipo]);
@@ -73,10 +75,10 @@ class Transaction {
         console.error(`Erro ao buscar categorias do usuário (${tipo}):`, error);
         throw error;
     }
-    } // Closing brace added here
+} // Closing brace added here
 
-    module.exports = {
-        getTransactionsByUserId,
-        Transaction,
-        getUserCategoriesByType,
-    };
+module.exports = {
+    getTransactionsByUserId,
+    Transaction,
+    getUserCategoriesByType,
+};

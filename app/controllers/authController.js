@@ -23,7 +23,8 @@ const authController = {
 
                 return res.status(200).json({
                     id: user.id,
-                    token: token
+                    token: token,
+                    
                 });
             } else {
                 return res.status(401).json({ mensagem: 'Credenciais inválidas' });
