@@ -1,13 +1,13 @@
 import { body, validationResult } from 'express-validator';
 
 const validateRegister = [
-    body('username')
+    body('nome')
         .notEmpty().withMessage('O nome de usuário é obrigatório.')
         .isLength({ min: 3 }).withMessage('O nome de usuário deve ter pelo menos 3 caracteres.'),
     body('email')
         .notEmpty().withMessage('O e-mail é obrigatório.')
         .isEmail().withMessage('O e-mail deve ser válido.'),
-    body('password')
+    body('senha')
         .notEmpty().withMessage('A senha é obrigatória.')
         .isLength({ min: 6 }).withMessage('A senha deve ter pelo menos 6 caracteres.'),
     (req, res, next) => {
