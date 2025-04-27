@@ -47,8 +47,14 @@ const swaggerDefinitions = {
                             schema: {
                                 type: 'object',
                                 properties: {
-                                    email: { type: 'string' },
-                                    senha: { type: 'string' },
+                                    email: {
+                                        type: 'string',
+                                        example: 'admin@admin.com',
+                                    },
+                                    senha: {
+                                        type: 'string',
+                                        example: 'senha123',
+                                    },
                                 },
                                 required: ['email', 'senha'],
                             },
@@ -88,9 +94,34 @@ const swaggerDefinitions = {
                             schema: {
                                 type: 'object',
                                 properties: {
-                                    nome: { type: 'string' },
-                                    email: { type: 'string' },
-                                    senha: { type: 'string' },
+                                    nome: {
+                                        type: 'string',
+                                        example: 'Hugo Santos',
+                                    },
+                                    email: {
+                                        type: 'string',
+                                        example: 'hugo.santos@hotmail.com',
+                                    },
+                                    senha: {
+                                        type: 'string',
+                                        example: 'senha456',
+                                    },
+                                    cpf: {
+                                        type: 'string',
+                                        example: '35193758851',
+                                    },
+                                    cep: {
+                                        type: 'string',
+                                        example: '12945130',
+                                    },
+                                    numero: {
+                                        type: 'string',
+                                        example: '145',
+                                    },
+                                    complemento: {
+                                        type: 'string',
+                                        example: 'Casa 145B',
+                                    },
                                 },
                                 required: ['nome', 'email', 'senha'],
                             },
