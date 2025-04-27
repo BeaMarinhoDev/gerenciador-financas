@@ -21,7 +21,9 @@
         "jsonwebtoken": "^9.0.2",
         "mysql": "^2.18.1",
         "mysql-promise": "^5.0.0",
-        "mysql2": "^3.14.0"
+        "mysql2": "^3.14.0",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.1"
     },
     "devDependencies": {
         "@babel/core": "^7.26.10",
