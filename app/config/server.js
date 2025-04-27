@@ -1,5 +1,6 @@
 import express, { json } from 'express';
 import cors from 'cors';
+import { setupSwagger } from './swagger.js'; // Importa a configuração do Swagger
 
 import authRoutes from '../routes/authRoutes.js';
 import usersRoutes from '../routes/usersRoutes.js';
@@ -17,6 +18,9 @@ app.use(cors({
 }));
 
 app.options('*', cors());
+
+// Configura o Swagger
+setupSwagger(app);
 
 app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
