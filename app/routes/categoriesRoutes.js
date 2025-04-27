@@ -1,11 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const categoriesController = require('../controllers/categoriesController');
+import { Router } from 'express';
+import {
+    getAllCategories,
+    createCategory,
+    getCategoryById,
+    updateCategoryById,
+    deleteCategoryById
+} from '../controllers/categoriesController.js';
+import validateToken from '../middleware/validateToken.js';
 
-router.get('/', categoriesController.getAllCategories);
-router.post('/', categoriesController.createCategory);
-router.get('/:id', categoriesController.getCategoryById);
-router.put('/:id', categoriesController.updateCategoryById);
-router.delete('/:id', categoriesController.deleteCategoryById);
+const router = Router();
 
-module.exports = router;
+// Rotas de categorias
+router.get('/', validateToken, getAllCategories);
+router.post('/', validateToken, createCategory);
+router.get('/:id', validateToken, getCategoryById);
+router.put('/:id', validateToken, updateCategoryById);
+router.delete('/:id', validateToken, deleteCategoryById);
+
+export default router;

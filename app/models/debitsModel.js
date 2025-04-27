@@ -1,8 +1,8 @@
-const connection = require('../config/db/db');
+import { connect } from '../config/db.js';
 
-async function getAllDebits() {
+export const getAllDebits = async () => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute('SELECT * FROM debits');
     await db.end();
     return rows;
@@ -10,11 +10,11 @@ async function getAllDebits() {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function createDebit(debit) {
+export const createDebit = async (debit) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const { valor, data_vencimento, descricao, category_id, user_id } = debit;
     console.log('Dados recebidos:', { valor, data_vencimento, descricao, category_id, user_id });
     const [result] = await db.execute(
@@ -27,11 +27,11 @@ async function createDebit(debit) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function getDebitById(id) {
+export const getDebitById = async (id) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute('SELECT * FROM debits WHERE id = ?', [id]);
     await db.end();
     return rows[0];
@@ -39,11 +39,11 @@ async function getDebitById(id) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function updateDebitById(id, debit) {
+export const updateDebitById = async (id, debit) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const { valor, data_vencimento, descricao, category_id, user_id } = debit;
     const [result] = await db.execute(
       'UPDATE debits SET valor = ?, data_vencimento = ?, descricao = ?, category_id = ?, user_id = ? WHERE id = ?',
@@ -55,11 +55,11 @@ async function updateDebitById(id, debit) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function deleteDebitById(id) {
+export const deleteDebitById = async (id) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [result] = await db.execute('DELETE FROM debits WHERE id = ?', [id]);
     await db.end();
     return result.affectedRows;
@@ -67,10 +67,11 @@ async function deleteDebitById(id) {
     console.error(error);
     throw error;
   }
-}
-async function getDebitsByCategory(categoryId) {
+};
+
+export const getDebitsByCategory = async (categoryId) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute(
       `SELECT d.*, c.nome AS nome_categoria
        FROM debits d
@@ -85,11 +86,11 @@ async function getDebitsByCategory(categoryId) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function getDebits(filters, sort, limit, offset) {
+export const getDebits = async (filters, sort, limit, offset) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     let query = `SELECT d.*, c.nome AS nome_categoria FROM debits d JOIN categories c ON d.category_id = c.id`;
     const params = [];
 
@@ -121,11 +122,11 @@ async function getDebits(filters, sort, limit, offset) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function getDebitsByUserId(userId) {
+export const getDebitsByUserId = async (userId) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute(
       `SELECT d.*, u.nome AS nome_usuario
        FROM debits d
@@ -139,16 +140,4 @@ async function getDebitsByUserId(userId) {
     console.error(error);
     throw error;
   }
-}
-
-module.exports = {
-  getAllDebits,
-  createDebit,
-  getDebitById,
-  updateDebitById,
-  deleteDebitById,
-  getDebitsByUserId,
-  getDebitsByCategory,
-  getDebits,
-  getDebitsByUserId
 };

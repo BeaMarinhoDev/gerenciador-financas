@@ -1,16 +1,26 @@
-const express = require('express');
-const router = express.Router();
-const debitsController = require('../controllers/debitsController');
+import { Router } from 'express';
+import {
+    getAllDebits,
+    getDebits,
+    createDebit,
+    getDebitById,
+    updateDebitById,
+    deleteDebitById,
+    getDebitsByUserId,
+    getDebitsByCategory
+} from '../controllers/debitsController.js';
+import validateToken from '../middleware/validateToken.js';
 
+const router = Router();
 
-router.get('/', debitsController.getAllDebits);
-router.get('/filtered', debitsController.getDebits);
-router.post('/', debitsController.createDebit);
-router.get('/:id', debitsController.getDebitById);
-router.put('/:id', debitsController.updateDebitById);
-router.delete('/:id', debitsController.deleteDebitById);
-router.get('/users/:id/debits', debitsController.getDebitsByUserId);
-router.get('/categories/:categoryId', debitsController.getDebitsByCategory);
+// Rotas de débitos
+router.get('/', validateToken, getAllDebits);
+router.get('/filtered', validateToken, getDebits);
+router.post('/', validateToken, createDebit);
+router.get('/:id', validateToken, getDebitById);
+router.put('/:id', validateToken, updateDebitById);
+router.delete('/:id', validateToken, deleteDebitById);
+router.get('/users/:id/debits', validateToken, getDebitsByUserId);
+router.get('/categories/:categoryId', validateToken, getDebitsByCategory);
 
-
-module.exports = router;
+export default router;

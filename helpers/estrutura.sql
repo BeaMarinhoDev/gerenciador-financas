@@ -21,6 +21,7 @@ CREATE TABLE `categories` (
   `nome` varchar(255) NOT NULL,
   `descricao` text,
   `tipo` varchar(50) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 

@@ -1,62 +1,51 @@
-const connection = require('../config/db/db');
-const bcrypt = require('bcryptjs');
+import { connect } from '../config/db.js';
+import { hash, compare } from 'bcryptjs';
 
-async function getAllUsers() {
+export const getAllUsers = async () => {
   try {
-    // Execute a query using promise
-    const db = await connection.connect();
-
-    const [rows, fields] = await db.execute('SELECT * FROM users');
-    console.log('Query Result:', rows);
-
-    // Close the connection
+    const db = await connect();
+    const [rows] = await db.execute('SELECT * FROM users');
     await db.end();
-
     return rows;
   } catch (err) {
     console.error('Error:', err);
+    throw err;
   }
-}
+};
 
-
-async function createUser(user) {
+export const createUser = async (user) => {
   try {
     const { nome, email, senha, cpf, cep, numero, complemento } = user;
-    const emailCleaned = email.trim(); // Remove espaços em branco do e-mail
-    const nomeCleaned = nome.trim(); // Remove espaços em branco do nome
-    const hashedPassword = await bcrypt.hash(senha, 10);
-    const cpfCleaned = cpf.replace(/\D/g, ''); // Remove caracteres não numéricos do CPF
-    const cepCleaned = cep.replace(/\D/g, ''); // Remove caracteres não numéricos do CEP
-    const numeroCleaned = numero.replace(/\D/g, ''); // Remove caracteres não numéricos do número
-    const complementoCleaned = complemento ? complemento.trim() : null; // Remove espaços em branco do complemento, se existir
+    const emailCleaned = email.trim();
+    const nomeCleaned = nome.trim();
+    const hashedPassword = await hash(senha, 10);
+    const cpfCleaned = cpf.replace(/\D/g, '');
+    const cepCleaned = cep.replace(/\D/g, '');
+    const numeroCleaned = numero.replace(/\D/g, '');
+    const complementoCleaned = complemento ? complemento.trim() : null;
 
-    // Execute a query using promise
-    const db = await connection.connect();
-
+    const db = await connect();
     const [existingUser] = await db.execute('SELECT * FROM users WHERE email = ?', [emailCleaned]);
     if (existingUser.length > 0) {
       await db.end();
       throw new Error('E-mail já cadastrado');
-    }  
+    }
 
     const [result] = await db.execute(
       'INSERT INTO users (nome, email, senha, cpf, cep, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [nomeCleaned, emailCleaned, hashedPassword, cpfCleaned, cepCleaned, numeroCleaned, complementoCleaned]
     );
-    
-    console.log('Query Result:', result);
     await db.end();
-    
     return result.insertId;
   } catch (err) {
     console.error('Error:', err);
     throw err;
   }
-}
+};
 
-async function loginUser(email, senha) {
+export const loginUser = async (email, senha) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
     await db.end();
 
@@ -65,10 +54,7 @@ async function loginUser(email, senha) {
     }
 
     const user = rows[0];
-    const passwordMatch = await bcrypt.compare(senha, user.senha);
-
-    //TODO: Caso precise testar uma senha criptografada
-    //console.log('Password:', await bcrypt.hash(senha, 10));
+    const passwordMatch = await compare(senha, user.senha);
 
     if (!passwordMatch) {
       throw new Error('Senha incorreta');
@@ -79,62 +65,57 @@ async function loginUser(email, senha) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function getUserById(userId) {
+export const getUserById = async (userId) => {
   try {
-    // Execute a query using promise
-    const db = await connection.connect();
-
-    const [rows, fields] = await db.execute('SELECT * FROM users WHERE id = ?', [userId]);
-    console.log('Query Result:', rows);
-
-    // Close the connection
+    const db = await connect();
+    const [rows] = await db.execute('SELECT * FROM users WHERE id = ?', [userId]);
     await db.end();
-
-    if (rows.length > 0)
-      return rows[0];
-    else
-      return null;
+    return rows.length > 0 ? rows[0] : null;
   } catch (err) {
     console.error('Error:', err);
+    throw err;
   }
-}
-async function updateUserById(id, user) {
+};
+
+export const updateUserById = async (id, user) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const { nome, email, senha, cpf, cep, numero, complemento } = user;
-    const hashedPassword = await bcrypt.hash(senha, 10);
+    const hashedPassword = await hash(senha, 10);
 
     const [result] = await db.execute(
       'UPDATE users SET nome = ?, email = ?, senha = ?, cpf = ?, cep = ?, numero = ?, complemento = ? WHERE id = ?',
       [nome, email, hashedPassword, cpf, cep, numero, complemento, id]
     );
     await db.end();
-    return result.affectedRows; // Retorna o número de linhas afetadas
+    return result.affectedRows;
   } catch (err) {
     console.error('Error:', err);
     throw err;
   }
-}
-async function deleteUserById(id) {
+};
+
+export const deleteUserById = async (id) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [result] = await db.execute('DELETE FROM users WHERE id = ?', [id]);
     await db.end();
-    return result.affectedRows; // Retorna o número de linhas afetadas
+    return result.affectedRows;
   } catch (err) {
     console.error('Error:', err);
     throw err;
   }
-}
-async function getUserCategories(userId) {
+};
+
+export const getUserCategories = async (userId) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute(
-      `select c.*, uc.user_id from categories c 
-        inner join users_categories uc on uc.category_id = c.id
-        where uc.user_id = ?`,
+      `SELECT c.*, uc.user_id FROM categories c 
+       INNER JOIN users_categories uc ON uc.category_id = c.id
+       WHERE uc.user_id = ?`,
       [userId]
     );
     await db.end();
@@ -143,11 +124,11 @@ async function getUserCategories(userId) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function getUserBalance(userId) {
+export const getUserBalance = async (userId) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute(
       `SELECT
         (SELECT COALESCE(SUM(valor), 0) FROM credits WHERE user_id = ?) -
@@ -160,11 +141,11 @@ async function getUserBalance(userId) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function getUserReportsByCategory(userId, categoryId) {
+export const getUserReportsByCategory = async (userId, categoryId) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute(
       `SELECT
         'débito' AS tipo,
@@ -188,11 +169,11 @@ async function getUserReportsByCategory(userId, categoryId) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function getUserReportsByPeriod(userId, startDate, endDate) {
+export const getUserReportsByPeriod = async (userId, startDate, endDate) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute(
       `SELECT
         'débito' AS tipo,
@@ -216,31 +197,18 @@ async function getUserReportsByPeriod(userId, startDate, endDate) {
     console.error(error);
     throw error;
   }
-}
-async function getUserByEmail(email) {
-  try {
-      const db = await connection.connect();
-      const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
-      await db.end();
-      return rows[0]; // Retorna o primeiro usuário encontrado ou undefined
-  } catch (err) {
-      console.error('Erro ao buscar usuário por e-mail:', err);
-      throw err;
-  }
-}
+};
 
-module.exports = {
-  getAllUsers,
-  createUser,
-  getUserById,
-  updateUserById,
-  deleteUserById,
-  getUserCategories,
-  getUserBalance,
-  getUserReportsByCategory,
-  getUserReportsByPeriod,
-  loginUser,
-  getUserByEmail
+export const getUserByEmail = async (email) => {
+  try {
+    const db = await connect();
+    const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
+    await db.end();
+    return rows[0];
+  } catch (err) {
+    console.error('Erro ao buscar usuário por e-mail:', err);
+    throw err;
+  }
 };
 
 

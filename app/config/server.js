@@ -1,27 +1,27 @@
-const express = require('express');
-const cors = require('cors');
+import express, { json } from 'express';
+import cors from 'cors';
 
-const authRoutes = require('../routes/authRoutes');
-const usersRoutes = require('../routes/usersRoutes');
-const creditsRoutes = require('../routes/creditsRoutes')
-const debitsRoutes = require('../routes/debitsRoutes'); 
-const categoriesRoutes = require('../routes/categoriesRoutes');
+import authRoutes from '../routes/authRoutes.js';
+import usersRoutes from '../routes/usersRoutes.js';
+import creditsRoutes from '../routes/creditsRoutes.js';
+import debitsRoutes from '../routes/debitsRoutes.js';
+import categoriesRoutes from '../routes/categoriesRoutes.js';
 
 const app = express();
 
-app.use(express.json());
+app.use(json());
 app.use(cors({
     origin: '*', // Substitua pelo domínio do seu frontend
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
 
-app.options('*', cors()) 
+app.options('*', cors());
 
-app.use('/auth', authRoutes)
+app.use('/auth', authRoutes);
 app.use('/users', usersRoutes);
 app.use('/categories', categoriesRoutes);
 app.use('/debits', debitsRoutes);
 app.use('/credits', creditsRoutes);
 
-module.exports = app;
+export { app };

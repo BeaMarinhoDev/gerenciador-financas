@@ -1,15 +1,26 @@
-const express = require('express');
-const router = express.Router();
-const creditsController = require('../controllers/creditsController');
+import { Router } from 'express';
+import {
+    getAllCredits,
+    getCredits,
+    createCredit,
+    getCreditById,
+    updateCreditById,
+    deleteCreditById,
+    getCreditsByUserId,
+    getCreditsByCategory
+} from '../controllers/creditsController.js';
+import validateToken from '../middleware/validateToken.js';
 
-router.get('/', creditsController.getAllCredits);
-router.get('/filtered', creditsController.getCredits);
-router.post('/', creditsController.createCredit);
-router.get('/:id', creditsController.getCreditById);
-router.put('/:id', creditsController.updateCreditById);
-router.delete('/:id', creditsController.deleteCreditById);
-router.get('/users/:id/credits', creditsController.getCreditsByUserId);
-router.get('/categories/:categoryId', creditsController.getCreditsByCategory);
+const router = Router();
 
+// Rotas de créditos
+router.get('/', validateToken, getAllCredits);
+router.get('/filtered', validateToken, getCredits);
+router.post('/', validateToken, createCredit);
+router.get('/:id', validateToken, getCreditById);
+router.put('/:id', validateToken, updateCreditById);
+router.delete('/:id', validateToken, deleteCreditById);
+router.get('/users/:id/credits', validateToken, getCreditsByUserId);
+router.get('/categories/:categoryId', validateToken, getCreditsByCategory);
 
-module.exports = router;
+export default router;

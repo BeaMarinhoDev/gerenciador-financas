@@ -1,11 +1,22 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+import { 
+    login, 
+    logout, 
+    register 
+} from '../controllers/authController.js';
+import validateLogin from '../middleware/validateLogin.js';
+import validateRegister from '../middleware/validateRegister.js';
 
-const authController = require('../controllers/authController'); // Controller para autenticação
+const router = Router();
 
 // Rotas de autenticação
-router.post('/login', authController.login); // Ou usersController.loginUser, dependendo de onde está a lógica final de login
-router.post('/logout', authController.logout); // Ou usersController.logoutUser, dependendo de onde está a lógica final de logout
-router.post('/register', authController.register); // Ou usersController.registerUser, dependendo de onde está a lógica final de registro
+// Login do usuário
+router.post('/login', validateLogin, login);
 
-module.exports = router;
+// Logout do usuário
+router.post('/logout', logout);
+
+// Registro de novo usuário
+router.post('/register', validateRegister, register);
+
+export default router;

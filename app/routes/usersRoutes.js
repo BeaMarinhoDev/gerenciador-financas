@@ -1,30 +1,56 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+import {
+    getUserTransactions,
+    getUserCategories,
+    getUserDebits,
+    getUserCredits,
+    getUserReportsByCategory,
+    getUserReportsByPeriod,
+    getUserBalance,
+    getUserData,
+    getAllUsers,
+    createUser,
+    getUserById,
+    updateUserById,
+    deleteUserById
+} from '../controllers/usersController.js';
+import {
+    getRecentTransactions,
+    addCredit,
+    addDebit
+} from '../controllers/transactionsController.js';
+import validateToken from '../middleware/validateToken.js';
 
-const authenticateToken = require('../middleware/authMiddleware');
+const router = Router();
 
-const usersController = require('../controllers/usersController');
-const transactionsController = require('../controllers/transactionsController');
+// Rotas de transações do usuário
+router.get('/transactions', validateToken, getUserTransactions);
+router.get('/transactions/recent', validateToken, getRecentTransactions);
+router.post('/transactions/credit', validateToken, addCredit);
+router.post('/transactions/debit', validateToken, addDebit);
 
-router.get('/transactions', authenticateToken, usersController.getUserTransactions);
-router.get('/categories', authenticateToken, usersController.getUserCategories);
-router.get('/debits', authenticateToken, usersController.getUserDebits);
-router.get('/credits', authenticateToken, usersController.getUserCredits);
-router.get('/reports/category/:categoryId', authenticateToken, usersController.getUserReportsByCategory);
-router.get('/reports/period', authenticateToken, usersController.getUserReportsByPeriod);
-router.get('/balance', authenticateToken, usersController.getUserBalance);
-router.get('/transactions/recent', authenticateToken, transactionsController.getRecentTransactions);
-router.post('/transactions/credit', authenticateToken, transactionsController.addCredit);
-router.post('/transactions/debit', authenticateToken, transactionsController.addDebit);
+// Rotas de categorias do usuário
+router.get('/categories', validateToken, getUserCategories);
 
-router.get('/user', authenticateToken, usersController.getUserData);
+// Rotas de débitos e créditos do usuário
+router.get('/debits', validateToken, getUserDebits);
+router.get('/credits', validateToken, getUserCredits);
 
-// Rotas de usuários (protegidas por autenticação)
-router.get('/', authenticateToken, usersController.getAllUsers);
-router.post('/', authenticateToken, usersController.createUser);
-router.get('/:id', authenticateToken, usersController.getUserById);
-router.put('/:id', authenticateToken, usersController.updateUserById);
-router.delete('/:id', authenticateToken, usersController.deleteUserById);
+// Rotas de relatórios do usuário
+router.get('/reports/category/:categoryId', validateToken, getUserReportsByCategory);
+router.get('/reports/period', validateToken, getUserReportsByPeriod);
 
+// Rota de balanço do usuário
+router.get('/balance', validateToken, getUserBalance);
 
-module.exports = router;
+// Rota para dados do usuário autenticado
+router.get('/user', validateToken, getUserData);
+
+// Rotas gerais de usuários
+router.get('/', validateToken, getAllUsers);
+router.post('/', validateToken, createUser);
+router.get('/:id', validateToken, getUserById);
+router.put('/:id', validateToken, updateUserById);
+router.delete('/:id', validateToken, deleteUserById);
+
+export default router;

@@ -1,4 +1,4 @@
-const transactionsModel = require('../models/transactionsModel');
+import { getTransactionsByUserId, Transaction } from '../models/transactionsModel.js'; // Importa o modelo de transações
 
 const transactionController = {
     async getRecentTransactions(req, res) {
@@ -6,7 +6,7 @@ const transactionController = {
     
         if (userId) {
             try {
-                const recentTransactions = await transactionsModel.getTransactionsByUserId(userId); // Buscar as 5 mais recentes
+                const recentTransactions = await getTransactionsByUserId(userId); // Buscar as 5 mais recentes
                 return res.json(recentTransactions);
             } catch (error) {
                 console.error('Erro ao buscar transações recentes:', error);
@@ -28,7 +28,7 @@ const transactionController = {
                 return res.status(400).json({ message: 'Valor, descrição e data são obrigatórios.' });
             }
 
-            const newTransaction = new transactionsModel.Transaction({
+            const newTransaction = new Transaction({
                 tipo: 'credit',
                 valor,
                 descricao,
@@ -56,7 +56,7 @@ const transactionController = {
                 return res.status(400).json({ message: 'Valor, descrição e data são obrigatórios.' });
             }
 
-            const newTransaction = new transactionsModel.Transaction({
+            const newTransaction = new Transaction({
                 tipo: 'debit',
                 valor,
                 descricao,
@@ -76,8 +76,6 @@ const transactionController = {
     },
 };
 
-module.exports = {
-    getRecentTransactions: transactionController.getRecentTransactions,
-    addCredit: transactionController.addCredit, 
-    addDebit: transactionController.addDebit,
-};
+export const getRecentTransactions = transactionController.getRecentTransactions;
+export const addCredit = transactionController.addCredit;
+export const addDebit = transactionController.addDebit;

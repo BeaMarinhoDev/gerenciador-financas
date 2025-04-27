@@ -1,8 +1,8 @@
-const connection = require('../config/db/db');
+import { connect } from '../config/db.js';
 
-async function getAllCategories() {
+export const getAllCategories = async () => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute('SELECT * FROM categories');
     await db.end();
     return rows;
@@ -10,11 +10,11 @@ async function getAllCategories() {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function createCategory(category, userId) {
+export const createCategory = async (category, userId) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const { nome, descricao, tipo } = category;
     const [result] = await db.execute(
       'INSERT INTO categories (nome, descricao, tipo) VALUES (?, ?, ?)',
@@ -33,12 +33,11 @@ async function createCategory(category, userId) {
     console.error(error);
     throw error;
   }
-}
-  
+};
 
-async function getCategoriesByUserId(userId) {
+export const getCategoriesByUserId = async (userId) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const [rows] = await db.execute(
       `SELECT c.*
        FROM categories c
@@ -52,11 +51,11 @@ async function getCategoriesByUserId(userId) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function updateCategoryById(id, category) {
+export const updateCategoryById = async (id, category) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
     const { nome, descricao, tipo } = category;
     const [result] = await db.execute(
       'UPDATE categories SET nome = ?, descricao = ?, tipo = ? WHERE id = ?',
@@ -68,11 +67,11 @@ async function updateCategoryById(id, category) {
     console.error(error);
     throw error;
   }
-}
+};
 
-async function deleteCategoryById(id) {
+export const deleteCategoryById = async (id) => {
   try {
-    const db = await connection.connect();
+    const db = await connect();
 
     // Excluir as relações na tabela users_categories
     await db.execute('DELETE FROM users_categories WHERE category_id = ?', [id]);
@@ -86,12 +85,19 @@ async function deleteCategoryById(id) {
     console.error('Error:', err);
     throw err;
   }
-}
+};
 
-module.exports = {
-  getAllCategories,
-  createCategory,
-  updateCategoryById,
-  deleteCategoryById,
-  getCategoriesByUserId
+export const getCategoryById = async (categoryId) => {
+  try {
+    const db = await connect();
+    const [rows] = await db.execute(
+      'SELECT * FROM categories WHERE id = ?',
+      [categoryId]
+    );
+    await db.end();
+    return rows.length > 0 ? rows[0] : null;
+  } catch (error) {
+    console.error('Erro ao buscar categoria por ID:', error);
+    throw error;
+  }
 };

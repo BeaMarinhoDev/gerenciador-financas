@@ -1,30 +1,34 @@
-const jwt = require('jsonwebtoken');
-const usersModel = require('../models/usersModel');
-const bcrypt = require('bcryptjs');
+import jsonwebtoken from 'jsonwebtoken'; // Importa o módulo como um todo
+import { getUserByEmail, createUser } from '../models/usersModel.js';
+import { compare } from 'bcryptjs';
+import dotenv from 'dotenv';
 
-require("dotenv").config();
+// Carrega as variáveis de ambiente
+dotenv.config();
+
+const { sign } = jsonwebtoken; // Desestrutura o método `sign` do módulo
 
 const authController = {
     async login(req, res) {
         try {
             const { email, senha } = req.body;
-            const user = await usersModel.getUserByEmail(email);
+            const user = await getUserByEmail(email);
 
             if (!user) {
                 return res.status(401).json({ mensagem: 'Credenciais inválidas' });
             }
 
-            const senhaCorreta = await bcrypt.compare(senha, user.senha);
+            const senhaCorreta = await compare(senha, user.senha);
 
             if (senhaCorreta) {
-                const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+                const token = sign({ id: user.id }, process.env.JWT_SECRET, {
                     expiresIn: process.env.JWT_EXPIRES_IN,
                 });
 
                 return res.status(200).json({
                     id: user.id,
+                    name: user.nome,
                     token: token,
-                    
                 });
             } else {
                 return res.status(401).json({ mensagem: 'Credenciais inválidas' });
@@ -46,23 +50,20 @@ const authController = {
 
     async register(req, res) {
         try {
-            const userId = await usersModel.createUser(req.body);
+            const userId = await createUser(req.body);
 
-            return res.status(201).json({ id: userId, ...req.body  });
+            return res.status(201).json({ id: userId, ...req.body });
         } catch (error) {
             console.error(error);
             if (error.message === 'E-mail já cadastrado') {
-              res.status(400).json({ mensagem: 'E-mail já cadastrado' }); // Retorna um erro 400 se o e-mail já existir
+                res.status(400).json({ mensagem: 'E-mail já cadastrado' });
             } else {
-              res.status(500).json({ mensagem: 'Erro ao criar usuário' }); // Retorna um erro 500 para outros erros
+                res.status(500).json({ mensagem: 'Erro ao criar usuário' });
             }
         }
     },
-
-}
-
-module.exports = {
-    login: authController.login,
-    logout: authController.logout,
-    register: authController.register,
 };
+
+export const login = authController.login;
+export const logout = authController.logout;
+export const register = authController.register;
