@@ -18,8 +18,8 @@ API para gerenciamento de finanças pessoais, permitindo o controle de receitas,
 
 1. Clone o repositório:
    ```bash
-   git clone <URL_DO_REPOSITORIO>
-   cd GerenciadorDeFinancas
+   git clone https://github.com/BeaMarinhoDev/gerenciador-financas.git
+   cd gerenciador-financas
    ```
 
 2. Instale as dependências:
@@ -27,18 +27,8 @@ API para gerenciamento de finanças pessoais, permitindo o controle de receitas,
    npm install
    ```
 
-3. Configure as variáveis de ambiente:
-   - Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
-     ```
-     DB_HOST=<host_do_banco>
-     DB_USER=<usuario_do_banco>
-     DB_PASSWORD=<senha_do_banco>
-     DB_NAME=<nome_do_banco>
-     JWT_SECRET=<chave_secreta>
-     ```
-
-4. Configure o banco de dados:
-   - Execute o script SQL localizado em `helpers/estrutura.sql` para criar as tabelas necessárias.
+3. Configure o banco de dados:
+   - O arquivo `app/config/db/db.js` contém as configurações de conexão com o banco de dados. Certifique-se de ajustar os valores de `host`, `user`, `password` e `database` conforme necessário.
 
 ## Uso
 
@@ -70,6 +60,7 @@ A coleção do Postman `helpers/gerenciador_financas API.postman_collection.json
 ## Estrutura do Projeto
 
 - `app.js`: Arquivo principal da aplicação.
+- `app/config/db/db.js`: Configuração de conexão com o banco de dados.
 - `helpers/estrutura.sql`: Script SQL para configuração do banco de dados.
 - `helpers/gerenciador_financas API.postman_collection.json`: Coleção do Postman para testar a API.
 - `package.json`: Configurações do projeto e dependências.
