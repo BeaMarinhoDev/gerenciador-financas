@@ -119,3 +119,10 @@ Contribuições são bem-vindas! Siga os passos abaixo:
 ## Licença
 
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo `LICENSE` para mais informações.
+
+## Executando com Docker
+
+1. Certifique-se de ter o Docker e o Docker Compose instalados.
+2. Construa e inicie os containers:
+   ```bash
+   docker-compose up --build
