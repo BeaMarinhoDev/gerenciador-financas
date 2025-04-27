@@ -122,7 +122,21 @@ Este projeto está licenciado sob a licença MIT. Consulte o arquivo `LICENSE` p
 
 ## Executando com Docker
 
-1. Certifique-se de ter o Docker e o Docker Compose instalados.
-2. Construa e inicie os containers:
-   ```bash
-   docker-compose up --build
+1. Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.  
+   - Para instalar o Docker, siga as instruções no site oficial: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/).  
+   - Para instalar o Docker Compose, siga as instruções em: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/).
+
+2. Configure as variáveis de ambiente:  
+   Certifique-se de que o arquivo `.env` na raiz do projeto contém as seguintes variáveis:
+   ```properties
+   # Configurações do banco de dados
+   DB_HOST=db
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=root
+   DB_NAME=gerenciador_financas
+
+   # Secrets para JWT
+   JWT_SECRET=x34sdjsdsDSsdd
+   JWT_EXPIRES_IN=1h
+   ```
