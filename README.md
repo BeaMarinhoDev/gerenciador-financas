@@ -39,7 +39,7 @@ API para gerenciamento de finanças pessoais, permitindo o controle de receitas,
    DB_NAME=gerenciador_financas
 
    # Secrets para JWT
-   JWT_SECRET=x34sdjsdsDSsdd
+   JWT_SECRET=CONFIDENCIAL
    JWT_EXPIRES_IN=1h
    ```
 
@@ -137,6 +137,6 @@ Este projeto está licenciado sob a licença MIT. Consulte o arquivo `LICENSE` p
    DB_NAME=gerenciador_financas
 
    # Secrets para JWT
-   JWT_SECRET=x34sdjsdsDSsdd
+   JWT_SECRET=CONFIDENCIAL
    JWT_EXPIRES_IN=1h
    ```
