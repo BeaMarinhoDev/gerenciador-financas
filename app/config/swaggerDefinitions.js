@@ -1,7 +1,7 @@
 const swaggerDefinitions = {
     openapi: '3.0.0',
     info: {
-        title: 'Gerenciador de Finanças API - Local',
+        title: 'Gerenciador de Finanças API ',//removido "Local"',
         version: '1.0.0',
         description: 'Documentação da API para gerenciamento de finanças pessoais',
     },
