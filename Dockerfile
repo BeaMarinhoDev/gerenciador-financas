@@ -1,4 +1,3 @@
-# filepath: Dockerfile
 FROM node:slim
 
 # Define o diretório de trabalho
@@ -10,8 +9,8 @@ RUN npm install
 
 COPY . .
 
-# Expõe a porta 3000
-EXPOSE 3000
+# Expõe as portas configuradas no .env
+EXPOSE ${HTTP_PORT}
 
 # Comando para iniciar a aplicação
 CMD ["npm", "start"]

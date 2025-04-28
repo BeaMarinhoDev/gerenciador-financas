@@ -13,6 +13,7 @@ API para gerenciamento de finanças pessoais, permitindo o controle de receitas,
 
 - Node.js (versão 14 ou superior)
 - MySQL
+- Docker e Docker Compose
 
 ## Instalação
 
@@ -41,6 +42,10 @@ API para gerenciamento de finanças pessoais, permitindo o controle de receitas,
    # Secrets para JWT
    JWT_SECRET=x34sdjsdsDSsdd
    JWT_EXPIRES_IN=1h
+
+   # Configurações do servidor
+   HTTP_PORT=3001
+   BACKEND_URL=http://localhost
    ```
 
    Essas variáveis são usadas para configurar a conexão com o banco de dados e para autenticação com JWT.
@@ -81,10 +86,29 @@ npm test
 
 A coleção do Postman `helpers/gerenciador_financas API.postman_collection.json` contém exemplos de requisições para todos os endpoints disponíveis.
 
+## Executando com Docker
+
+1. Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.  
+   - Para instalar o Docker, siga as instruções no site oficial: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/).  
+   - Para instalar o Docker Compose, siga as instruções em: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/).
+
+2. Configure as variáveis de ambiente:  
+   Certifique-se de que o arquivo `.env` na raiz do projeto contém as variáveis mencionadas acima.
+
+3. Construa e inicie os containers:
+   ```bash
+   docker-compose up --build
+   ```
+
+4. Acesse a aplicação:
+   - A API estará disponível em `http://localhost:3000` (ou na porta configurada no `.env`).
+   - A documentação do Swagger estará disponível em `http://localhost:3000/api-docs`.
+
+
 ## Estrutura do Projeto
 
 - `app.js`: Arquivo principal da aplicação.
-- `app/config/db/db.js`: Configuração de conexão com o banco de dados.
+- `app/config/db.js`: Configuração de conexão com o banco de dados.
 - `helpers/estrutura.sql`: Script SQL para configuração do banco de dados.
 - `helpers/gerenciador_financas API.postman_collection.json`: Coleção do Postman para testar a API.
 - `package.json`: Configurações do projeto e dependências.
@@ -96,6 +120,7 @@ A coleção do Postman `helpers/gerenciador_financas API.postman_collection.json
 - **MySQL**: Banco de dados relacional.
 - **JWT**: Autenticação baseada em tokens.
 - **Jest**: Framework de testes.
+- **Docker**: Containerização da aplicação.
 
 ## Contribuição
 
@@ -119,24 +144,3 @@ Contribuições são bem-vindas! Siga os passos abaixo:
 ## Licença
 
 Este projeto está licenciado sob a licença MIT. Consulte o arquivo `LICENSE` para mais informações.
-
-## Executando com Docker
-
-1. Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.  
-   - Para instalar o Docker, siga as instruções no site oficial: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/).  
-   - Para instalar o Docker Compose, siga as instruções em: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/).
-
-2. Configure as variáveis de ambiente:  
-   Certifique-se de que o arquivo `.env` na raiz do projeto contém as seguintes variáveis:
-   ```properties
-   # Configurações do banco de dados
-   DB_HOST=db
-   DB_PORT=3306
-   DB_USER=root
-   DB_PASSWORD=root
-   DB_NAME=gerenciador_financas
-
-   # Secrets para JWT
-   JWT_SECRET=x34sdjsdsDSsdd
-   JWT_EXPIRES_IN=1h
-   ```
