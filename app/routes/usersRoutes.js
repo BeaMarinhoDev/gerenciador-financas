@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
     getUserTransactions,
+    getRecentTransactions,
     getUserCategories,
     getUserDebits,
     getUserCredits,
@@ -12,38 +13,31 @@ import {
     createUser,
     getUserById,
     updateUserById,
-    deleteUserById
+    deleteUserById,
 } from '../controllers/usersController.js';
-import {
-    getRecentTransactions,
-    addCredit,
-    addDebit
-} from '../controllers/transactionsController.js';
 import validateToken from '../middleware/validateToken.js';
 
 const router = Router();
 
-// Rotas de transações do usuário
+// Transações do usuário
 router.get('/transactions', validateToken, getUserTransactions);
 router.get('/transactions/recent', validateToken, getRecentTransactions);
-router.post('/transactions/credit', validateToken, addCredit);
-router.post('/transactions/debit', validateToken, addDebit);
 
-// Rotas de categorias do usuário
+// Categorias do usuário
 router.get('/categories', validateToken, getUserCategories);
 
-// Rotas de débitos e créditos do usuário
+// Débitos e créditos do usuário
 router.get('/debits', validateToken, getUserDebits);
 router.get('/credits', validateToken, getUserCredits);
 
-// Rotas de relatórios do usuário
+// Relatórios do usuário
 router.get('/reports/category/:categoryId', validateToken, getUserReportsByCategory);
 router.get('/reports/period', validateToken, getUserReportsByPeriod);
 
-// Rota de balanço do usuário
+// Balanço do usuário
 router.get('/balance', validateToken, getUserBalance);
 
-// Rota para dados do usuário autenticado
+// Dados do usuário autenticado
 router.get('/user', validateToken, getUserData);
 
 // Rotas gerais de usuários

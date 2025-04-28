@@ -1,12 +1,14 @@
-import { getAllUsers as _getAllUsers, createUser as _createUser, getUserById as _getUserById, updateUserById as _updateUserById, deleteUserById as _deleteUserById, getUserBalance as _getUserBalance, getUserReportsByCategory as _getUserReportsByCategory, getUserReportsByPeriod as _getUserReportsByPeriod } from '../models/usersModel.js';
-import { getDebitsByUserId } from '../models/debitsModel.js';
-import { getCreditsByUserId } from '../models/creditsModel.js';
-import { getUserCategoriesByType, getTransactionsByUserId } from '../models/transactionsModel.js';
+// Imports de Models
+import * as userModel from '../models/usersModel.js';
+import * as debitModel from '../models/debitsModel.js';
+import * as creditModel from '../models/creditsModel.js';
+import * as transactionModel from '../models/transactionsModel.js';
 
+// Controllers
 const usersControllers = {
-  async getAllUsers(req, res) {
+  async getAllUsers(_req, res) {
     try {
-      const users = await _getAllUsers();
+      const users = await userModel.getAllUsers();
       res.json(users);
     } catch (error) {
       console.error(error);
@@ -16,14 +18,14 @@ const usersControllers = {
 
   async createUser(req, res) {
     try {
-      const userId = await _createUser(req.body);
+      const userId = await userModel.createUser(req.body);
       res.status(201).json({ id: userId, ...req.body });
     } catch (error) {
       console.error(error);
       if (error.message === 'E-mail já cadastrado') {
-        res.status(400).json({ mensagem: 'E-mail já cadastrado' }); // Retorna um erro 400 se o e-mail já existir
+        res.status(400).json({ mensagem: 'E-mail já cadastrado' });
       } else {
-        res.status(500).json({ mensagem: 'Erro ao criar usuário' }); // Retorna um erro 500 para outros erros
+        res.status(500).json({ mensagem: 'Erro ao criar usuário' });
       }
     }
   },
@@ -31,21 +33,22 @@ const usersControllers = {
   async getUserById(req, res) {
     try {
       const userId = req.params.id;
-      const user = await _getUserById(userId);
+      const user = await userModel.getUserById(userId);
 
-      if (user !== null)
+      if (user !== null) {
         res.json(user);
-      else
-        res.status(404).json({ mensagem: 'Nao foi encontrado o usuário ' + userId });
+      } else {
+        res.status(404).json({ mensagem: `Não foi encontrado o usuário ${userId}` });
+      }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ mensagem: 'Erro ao buscar o usuário ' + userId });
+      res.status(500).json({ mensagem: `Erro ao buscar o usuário ${userId}` });
     }
   },
 
   async updateUserById(req, res) {
     try {
-      const affectedRows = await _updateUserById(req.params.id, req.body);
+      const affectedRows = await userModel.updateUserById(req.params.id, req.body);
       if (affectedRows > 0) {
         res.json({ mensagem: 'Usuário atualizado com sucesso' });
       } else {
@@ -59,7 +62,7 @@ const usersControllers = {
 
   async deleteUserById(req, res) {
     try {
-      const affectedRows = await _deleteUserById(req.params.id);
+      const affectedRows = await userModel.deleteUserById(req.params.id);
       if (affectedRows > 0) {
         res.json({ mensagem: 'Usuário excluído com sucesso' });
       } else {
@@ -72,11 +75,10 @@ const usersControllers = {
   },
 
   async getUserCategories(req, res) {
-    
     try {
-      const userId = req.user.id; // Pega o ID do usuário autenticado do token
-      const debitCategories = await getUserCategoriesByType(userId, 'debito');
-      const creditCategories = await getUserCategoriesByType(userId, 'credito');
+      const userId = req.user.id;
+      const debitCategories = await transactionModel.getUserCategoriesByType(userId, 'debito');
+      const creditCategories = await transactionModel.getUserCategoriesByType(userId, 'credito');
 
       return res.status(200).json({ debit: debitCategories, credit: creditCategories });
     } catch (error) {
@@ -88,7 +90,7 @@ const usersControllers = {
   async getUserDebits(req, res) {
     try {
       const userId = req.user.id;
-      const debits = await getDebitsByUserId(userId);
+      const debits = await debitModel.getDebitsByUserId(userId);
       res.json(debits);
     } catch (error) {
       console.error(error);
@@ -99,7 +101,7 @@ const usersControllers = {
   async getUserCredits(req, res) {
     try {
       const userId = req.user.id;
-      const credits = await getCreditsByUserId(userId);
+      const credits = await creditModel.getCreditsByUserId(userId);
       res.json(credits);
     } catch (error) {
       console.error(error);
@@ -109,9 +111,8 @@ const usersControllers = {
 
   async getUserTransactions(req, res) {
     try {
-      const userId = req.user.id; // Pega o ID do usuário autenticado do token
-      console.log('User ID:', userId); // Log para verificar o ID do usuário
-      const transactions = await getTransactionsByUserId(userId);
+      const userId = req.user.id;
+      const transactions = await transactionModel.getTransactionsByUserId(userId);
       res.json(transactions);
     } catch (error) {
       console.error(error);
@@ -122,7 +123,7 @@ const usersControllers = {
   async getUserBalance(req, res) {
     try {
       const userId = req.user.id;
-      const balance = await _getUserBalance(userId);
+      const balance = await userModel.getUserBalance(userId);
       res.json({ balance });
     } catch (error) {
       console.error(error);
@@ -134,7 +135,7 @@ const usersControllers = {
     try {
       const userId = req.user.id;
       const categoryId = req.params.categoryId;
-      const reports = await _getUserReportsByCategory(userId, categoryId);
+      const reports = await userModel.getUserReportsByCategory(userId, categoryId);
       res.json(reports);
     } catch (error) {
       console.error(error);
@@ -147,7 +148,7 @@ const usersControllers = {
       const userId = req.user.id;
       const startDate = req.query.startDate;
       const endDate = req.query.endDate;
-      const reports = await _getUserReportsByPeriod(userId, startDate, endDate);
+      const reports = await userModel.getUserReportsByPeriod(userId, startDate, endDate);
       res.json(reports);
     } catch (error) {
       console.error(error);
@@ -155,11 +156,10 @@ const usersControllers = {
     }
   },
 
-async getUserData(req, res) {
+  async getUserData(req, res) {
     try {
-      // O middleware validatetoken já colocou as informações do usuário decodificadas do token em req.user
       const userId = req.user.id;
-      const user = await _getUserById(userId);
+      const user = await userModel.getUserById(userId);
 
       if (user) {
         return res.json({ nome: user.nome });
@@ -171,20 +171,34 @@ async getUserData(req, res) {
       return res.status(500).json({ message: 'Erro interno do servidor.' });
     }
   },
+  async getRecentTransactions(req, res) {
+    try {
+        const userId = req.user.id; // Obtém o ID do usuário autenticado
+        const recentTransactions = await transactionModel.getRecentTransactionsByUserId(userId); // Chama o método do model
+        res.json(recentTransactions); // Retorna as transações recentes
+    } catch (error) {
+        console.error('Erro ao buscar transações recentes do usuário:', error);
+        res.status(500).json({ mensagem: 'Erro ao buscar transações recentes do usuário' });
+    }
+},
+  
 
 }
 
-export const getAllUsers = usersControllers.getAllUsers;
-export const createUser = usersControllers.createUser;
-export const getUserById = usersControllers.getUserById;
-export const updateUserById = usersControllers.updateUserById;
-export const deleteUserById = usersControllers.deleteUserById;
-export const getUserCategories = usersControllers.getUserCategories;
-export const getUserDebits = usersControllers.getUserDebits;
-export const getUserCredits = usersControllers.getUserCredits;
-export const getUserTransactions = usersControllers.getUserTransactions;
-export const getUserBalance = usersControllers.getUserBalance;
-export const getUserReportsByCategory = usersControllers.getUserReportsByCategory;
-export const getUserReportsByPeriod = usersControllers.getUserReportsByPeriod;
-export const getUserData = usersControllers.getUserData;
-
+// Exportação dos métodos do controlador
+export const {
+  getAllUsers,
+  createUser,
+  getUserById,
+  updateUserById,
+  deleteUserById,
+  getUserCategories,
+  getUserDebits,
+  getUserCredits,
+  getUserTransactions,
+  getUserBalance,
+  getUserReportsByCategory,
+  getUserReportsByPeriod,
+  getUserData,
+  getRecentTransactions,
+} = usersControllers;

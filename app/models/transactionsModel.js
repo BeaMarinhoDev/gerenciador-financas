@@ -36,11 +36,10 @@ export const getTransactionsByUserId = async (userId) => {
         return rows;
     } catch (error) {
         console.error('Erro ao buscar transações:', error);
-        throw error;
-    }
-};
-
-export class Transaction {
+    throw error;
+}
+}
+ export class Transaction {
     constructor(data) {
         this.tipo = data.tipo;
         this.valor = data.valor;
@@ -79,5 +78,23 @@ export const getUserCategoriesByType = async (userId, tipo) => {
     } catch (error) {
         console.error(`Erro ao buscar categorias do usuário (${tipo}):`, error);
         throw error;
-    }
+}
+}
+export const getRecentTransactionsByUserId = async (userId) => {
+  try {
+      const query = `
+          SELECT *
+          FROM transactions
+          WHERE user_id = ?
+          ORDER BY data DESC
+          LIMIT 10
+      `;
+      const [rows] = await db.execute(query, [userId]); // Substitua `db` pelo seu objeto de conexão ao banco
+      return rows;
+  } catch (error) {
+      console.error('Erro ao buscar transações recentes:', error);
+      throw error;
+  }
 };
+
+
