@@ -1,3 +1,10 @@
+import dotenv from 'dotenv';
+
+// Carrega as variáveis de ambiente
+dotenv.config();
+
+// Verifica se a variável de ambiente BACKEND_URL está definida
+
 const swaggerDefinitions = {
     openapi: '3.0.0',
     info: {
@@ -7,7 +14,7 @@ const swaggerDefinitions = {
     },
     servers: [
         {
-            url: 'http://localhost:3000',
+            url: `${process.env.BACKEND_URL}:${process.env.HTTP_PORT}`, // Usa o endpoint dinâmico
             description: 'Servidor local',
         },
     ],

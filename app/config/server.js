@@ -1,7 +1,6 @@
 import express, { json } from 'express';
 import cors from 'cors';
-import { setupSwagger } from './swagger.js'; // Importa a configuração do Swagger
-
+import { setupSwagger } from './swagger.js';
 import authRoutes from '../routes/authRoutes.js';
 import usersRoutes from '../routes/usersRoutes.js';
 import creditsRoutes from '../routes/creditsRoutes.js';
@@ -12,7 +11,7 @@ const app = express();
 
 app.use(json());
 app.use(cors({
-    origin: '*', // Substitua pelo domínio do seu frontend
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
