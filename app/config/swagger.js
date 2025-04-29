@@ -1,6 +1,16 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDefinitions from './swaggerDefinitions.js';
+//import swaggerDefinitions from './swaggerDefinitions.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Recria __dirname para ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const swaggerFilePath = path.resolve(__dirname, 'swagger.json');
+const swaggerDefinitions = JSON.parse(fs.readFileSync(swaggerFilePath, 'utf8'));
 
 const options = {
     definition: swaggerDefinitions,
