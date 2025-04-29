@@ -1,10 +1,11 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Gerenciador de Finanças API",
+    "title": "Gerenciador de Finanças - API",
     "version": "1.0.0",
     "description": "API para gerenciamento de finanças pessoais. Inclui autenticação, usuários, categorias, créditos, débitos e transações."
   },
+ 
   "paths": {
     "/auth/login": {
       "post": {
@@ -80,7 +81,15 @@
         "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
-            "description": "Lista de usuários"
+            "description": "Lista de usuários",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/User" }
+                }
+              }
+            }
           }
         }
       }
@@ -806,6 +815,86 @@
         ],
         "responses": {
           "200": { "description": "Débitos da categoria listados" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "nome": { "type": "string", "example": "João Silva" },
+          "email": { "type": "string", "example": "joao.silva@email.com" },
+          "senha": { "type": "string", "example": "senha123" }
+        },
+        "required": ["nome", "email", "senha"]
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "valor": { "type": "number", "example": 150.75 },
+          "tipo": { "type": "string", "example": "crédito" },
+          "descricao": { "type": "string", "example": "Pagamento de salário" },
+          "data": { "type": "string", "format": "date", "example": "2025-04-29" }
+        },
+        "required": ["valor", "tipo", "descricao", "data"]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "nome": { "type": "string", "example": "Alimentação" },
+          "descricao": { "type": "string", "example": "Gastos com alimentação" },
+          "tipo": { "type": "string", "example": "débito" }
+        },
+        "required": ["nome", "tipo"]
+      },
+      "Credit": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "valor": { "type": "number", "example": 500.0 },
+          "descricao": { "type": "string", "example": "Salário" },
+          "data_vencimento": { "type": "string", "format": "date", "example": "2025-05-01" },
+          "category_id": { "type": "integer", "example": 2 },
+          "user_id": { "type": "integer", "example": 1 }
+        },
+        "required": ["valor", "descricao", "data_vencimento", "category_id", "user_id"]
+      },
+      "Debit": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "valor": { "type": "number", "example": 200.0 },
+          "descricao": { "type": "string", "example": "Conta de luz" },
+          "data_vencimento": { "type": "string", "format": "date", "example": "2025-05-10" },
+          "category_id": { "type": "integer", "example": 3 },
+          "user_id": { "type": "integer", "example": 1 }
+        },
+        "required": ["valor", "descricao", "data_vencimento", "category_id", "user_id"]
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "balance": { "type": "number", "example": 1000.0 }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "tipo": { "type": "string", "example": "crédito" },
+          "valor": { "type": "number", "example": 150.75 },
+          "data": { "type": "string", "format": "date", "example": "2025-04-29" }
         }
       }
     }
