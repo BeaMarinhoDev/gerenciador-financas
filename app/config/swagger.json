@@ -456,14 +456,47 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": { "type": "string" }
-                }
+                  "name": { "type": "string", "example": "Alimentação" },
+                  "descricao": { "type": "string", "example": "Gastos com alimentação" },
+                  "tipo": { "type": "string", "example": "débito" },
+                  "userId": { "type": "integer", "example": 1 }
+                },
+                "required": ["name", "tipo", "userId"]
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Categoria criada com sucesso" }
+          "201": {
+            "description": "Categoria criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "name": { "type": "string", "example": "Alimentação" },
+                    "descricao": { "type": "string", "example": "Gastos com alimentação" },
+                    "tipo": { "type": "string", "example": "débito" },
+                    "userId": { "type": "integer", "example": 1 }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Erro de validação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": { "type": "string", "example": "UserId é obrigatório para criar categoria" }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

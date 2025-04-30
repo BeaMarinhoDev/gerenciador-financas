@@ -73,7 +73,7 @@ export const getDebitsByCategory = async (categoryId) => {
   try {
     const db = await connect();
     const [rows] = await db.execute(
-      `SELECT d.*, c.nome AS nome_categoria
+      `SELECT d.*, c.name AS nome_categoria
        FROM debits d
        JOIN categories c ON d.category_id = c.id
        WHERE d.category_id = ?`,
@@ -128,7 +128,7 @@ export const getDebitsByUserId = async (userId) => {
   try {
     const db = await connect();
     const [rows] = await db.execute(
-      `SELECT d.*, u.nome AS nome_usuario
+      `SELECT d.*, u.name AS nome_usuario
        FROM debits d
        JOIN users u ON d.user_id = u.id
        WHERE d.user_id = ?`,
