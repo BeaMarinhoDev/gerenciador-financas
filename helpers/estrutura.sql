@@ -1,4 +1,4 @@
-CREATE DATABASE `gerenciador_financas` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE `gerenciador_financas`;
 
 USE `gerenciador_financas`;
 
