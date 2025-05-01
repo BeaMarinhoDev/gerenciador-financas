@@ -1,0 +1,935 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Gerenciador de Finanças - API",
+    "version": "1.0.0",
+    "description": "API para gerenciamento de finanças pessoais. Inclui autenticação, usuários, categorias, créditos, débitos e transações."
+  },
+ 
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Login do usuário",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso"
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Registro de novo usuário",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário registrado com sucesso"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout do usuário",
+        "tags": ["auth"],
+        "responses": {
+          "200": {
+            "description": "Logout realizado com sucesso"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Lista todos os usuários",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/User" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Busca usuário por ID",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Usuário encontrado" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza usuário",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Usuário atualizado com sucesso" }
+        }
+      },
+      "delete": {
+        "summary": "Remove usuário",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Usuário removido com sucesso" }
+        }
+      }
+    },
+    "/users/transactions": {
+      "get": {
+        "summary": "Retorna todas as transações do usuário",
+        "tags": ["transactions"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de transações do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "valor": { "type": "number" },
+                      "tipo": { "type": "string" },
+                      "descricao": { "type": "string" },
+                      "data": { "type": "string", "format": "date" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/transactions/recent": {
+      "get": {
+        "summary": "Retorna as transações recentes do usuário",
+        "tags": ["transactions"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de transações recentes do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "valor": { "type": "number" },
+                      "tipo": { "type": "string" },
+                      "descricao": { "type": "string" },
+                      "data": { "type": "string", "format": "date" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/categories": {
+      "get": {
+        "summary": "Retorna as categorias do usuário",
+        "tags": ["categories"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de categorias do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "debit": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "nome": { "type": "string" }
+                        }
+                      }
+                    },
+                    "credit": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "nome": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/debits": {
+      "get": {
+        "summary": "Retorna os débitos do usuário",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de débitos do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "valor": { "type": "number" },
+                      "descricao": { "type": "string" },
+                      "data_vencimento": { "type": "string", "format": "date" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/credits": {
+      "get": {
+        "summary": "Retorna os créditos do usuário",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de créditos do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "integer" },
+                      "valor": { "type": "number" },
+                      "descricao": { "type": "string" },
+                      "data_vencimento": { "type": "string", "format": "date" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/reports/category/{categoryId}": {
+      "get": {
+        "summary": "Retorna relatórios por categoria",
+        "tags": ["reports"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "ID da categoria"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Relatórios por categoria.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tipo": { "type": "string" },
+                      "valor": { "type": "number" },
+                      "data": { "type": "string", "format": "date" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/reports/period": {
+      "get": {
+        "summary": "Retorna relatórios por período",
+        "tags": ["reports"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "date" },
+            "description": "Data de início do período"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "format": "date" },
+            "description": "Data de fim do período"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Relatórios por período.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "tipo": { "type": "string" },
+                      "valor": { "type": "number" },
+                      "data": { "type": "string", "format": "date" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/balance": {
+      "get": {
+        "summary": "Retorna o balanço financeiro do usuário",
+        "tags": ["balance"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Balanço financeiro do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "balance": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/user": {
+      "get": {
+        "summary": "Retorna os dados do usuário autenticado",
+        "tags": ["users"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Dados do usuário autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "nome": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Lista todas as categorias",
+        "tags": ["categories"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Categorias listadas" }
+        }
+      },
+      "post": {
+        "summary": "Cria nova categoria",
+        "tags": ["categories"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Alimentação" },
+                  "descricao": { "type": "string", "example": "Gastos com alimentação" },
+                  "tipo": { "type": "string", "example": "débito" },
+                  "userId": { "type": "integer", "example": 1 }
+                },
+                "required": ["name", "tipo", "userId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Categoria criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer", "example": 1 },
+                    "name": { "type": "string", "example": "Alimentação" },
+                    "descricao": { "type": "string", "example": "Gastos com alimentação" },
+                    "tipo": { "type": "string", "example": "débito" },
+                    "userId": { "type": "integer", "example": 1 }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Erro de validação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": { "type": "string", "example": "UserId é obrigatório para criar categoria" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Busca categoria por ID",
+        "tags": ["categories"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Categoria encontrada" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza categoria",
+        "tags": ["categories"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Categoria atualizada com sucesso" }
+        }
+      },
+      "delete": {
+        "summary": "Remove categoria",
+        "tags": ["categories"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Categoria removida com sucesso" }
+        }
+      }
+    },
+    "/credits": {
+      "get": {
+        "summary": "Lista todos os créditos",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Créditos listados" }
+        }
+      },
+      "post": {
+        "summary": "Cria novo crédito",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": { "type": "number" },
+                  "description": { "type": "string" },
+                  "categoryId": { "type": "string" },
+                  "userId": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Crédito criado com sucesso" }
+        }
+      }
+    },
+    "/credits/filtered": {
+      "get": {
+        "summary": "Lista créditos filtrados",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Créditos filtrados listados" }
+        }
+      }
+    },
+    "/credits/{id}": {
+      "get": {
+        "summary": "Busca crédito por ID",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Crédito encontrado" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza crédito",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": { "type": "number" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Crédito atualizado com sucesso" }
+        }
+      },
+      "delete": {
+        "summary": "Remove crédito",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Crédito removido com sucesso" }
+        }
+      }
+    },
+    "/credits/users/{id}/credits": {
+      "get": {
+        "summary": "Lista créditos de um usuário",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Créditos do usuário listados" }
+        }
+      }
+    },
+    "/credits/categories/{categoryId}": {
+      "get": {
+        "summary": "Lista créditos por categoria",
+        "tags": ["credits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Créditos da categoria listados" }
+        }
+      }
+    },
+    "/debits": {
+      "get": {
+        "summary": "Lista todos os débitos",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Débitos listados" }
+        }
+      },
+      "post": {
+        "summary": "Cria novo débito",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": { "type": "number" },
+                  "description": { "type": "string" },
+                  "categoryId": { "type": "string" },
+                  "userId": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Débito criado com sucesso" }
+        }
+      }
+    },
+    "/debits/filtered": {
+      "get": {
+        "summary": "Lista débitos filtrados",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Débitos filtrados listados" }
+        }
+      }
+    },
+    "/debits/{id}": {
+      "get": {
+        "summary": "Busca débito por ID",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Débito encontrado" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza débito",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": { "type": "number" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Débito atualizado com sucesso" }
+        }
+      },
+      "delete": {
+        "summary": "Remove débito",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Débito removido com sucesso" }
+        }
+      }
+    },
+    "/debits/users/{id}/debits": {
+      "get": {
+        "summary": "Lista débitos de um usuário",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Débitos do usuário listados" }
+        }
+      }
+    },
+    "/debits/categories/{categoryId}": {
+      "get": {
+        "summary": "Lista débitos por categoria",
+        "tags": ["debits"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Débitos da categoria listados" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "nome": { "type": "string", "example": "João Silva" },
+          "email": { "type": "string", "example": "joao.silva@email.com" },
+          "senha": { "type": "string", "example": "senha123" }
+        },
+        "required": ["nome", "email", "senha"]
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "valor": { "type": "number", "example": 150.75 },
+          "tipo": { "type": "string", "example": "crédito" },
+          "descricao": { "type": "string", "example": "Pagamento de salário" },
+          "data": { "type": "string", "format": "date", "example": "2025-04-29" }
+        },
+        "required": ["valor", "tipo", "descricao", "data"]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "nome": { "type": "string", "example": "Alimentação" },
+          "descricao": { "type": "string", "example": "Gastos com alimentação" },
+          "tipo": { "type": "string", "example": "débito" }
+        },
+        "required": ["nome", "tipo"]
+      },
+      "Credit": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "valor": { "type": "number", "example": 500.0 },
+          "descricao": { "type": "string", "example": "Salário" },
+          "data_vencimento": { "type": "string", "format": "date", "example": "2025-05-01" },
+          "category_id": { "type": "integer", "example": 2 },
+          "user_id": { "type": "integer", "example": 1 }
+        },
+        "required": ["valor", "descricao", "data_vencimento", "category_id", "user_id"]
+      },
+      "Debit": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 1 },
+          "valor": { "type": "number", "example": 200.0 },
+          "descricao": { "type": "string", "example": "Conta de luz" },
+          "data_vencimento": { "type": "string", "format": "date", "example": "2025-05-10" },
+          "category_id": { "type": "integer", "example": 3 },
+          "user_id": { "type": "integer", "example": 1 }
+        },
+        "required": ["valor", "descricao", "data_vencimento", "category_id", "user_id"]
+      },
+      "Balance": {
+        "type": "object",
+        "properties": {
+          "balance": { "type": "number", "example": 1000.0 }
+        }
+      },
+      "Report": {
+        "type": "object",
+        "properties": {
+          "tipo": { "type": "string", "example": "crédito" },
+          "valor": { "type": "number", "example": 150.75 },
+          "data": { "type": "string", "format": "date", "example": "2025-04-29" }
+        }
+      }
+    }
+  }
+}

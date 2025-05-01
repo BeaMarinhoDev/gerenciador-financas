@@ -1,4 +1,5 @@
-import { connect } from '../config/db.js';
+import { connect } from '../config/db.js'; // Ajuste o caminho conforme necessário
+
 
 export const getTransactionsByUserId = async (userId) => {
     try {
@@ -82,6 +83,7 @@ export const getUserCategoriesByType = async (userId, tipo) => {
 }
 export const getRecentTransactionsByUserId = async (userId) => {
   try {
+      const db = await connect();
       const query = `
           SELECT *
           FROM transactions
@@ -90,6 +92,7 @@ export const getRecentTransactionsByUserId = async (userId) => {
           LIMIT 10
       `;
       const [rows] = await db.execute(query, [userId]); // Substitua `db` pelo seu objeto de conexão ao banco
+      await db.end(); // Feche a conexão após a consulta
       return rows;
   } catch (error) {
       console.error('Erro ao buscar transações recentes:', error);

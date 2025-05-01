@@ -16,12 +16,20 @@ export const createCategory = async (category, userId) => {
   try {
     const db = await connect();
     const { nome, descricao, tipo } = category;
+
+    // Validação adicional para evitar valores undefined
+    if (!nome || !tipo || !userId) {
+      throw new Error('Parâmetros inválidos para criar categoria');
+    }
+
+    // Insere a categoria na tabela categories
     const [result] = await db.execute(
-      'INSERT INTO categories (nome, descricao, tipo) VALUES (?, ?, ?)',
-      [nome, descricao, tipo]
+      'INSERT INTO categories (nome, descricao, tipo, user_id) VALUES (?, ?, ?, ?)',
+      [nome, descricao || null, tipo, userId]
     );
     const categoryId = result.insertId;
 
+    // Relaciona a categoria ao usuário na tabela users_categories
     await db.execute(
       'INSERT INTO users_categories (user_id, category_id) VALUES (?, ?)',
       [userId, categoryId]

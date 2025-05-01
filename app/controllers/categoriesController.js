@@ -19,14 +19,19 @@ const categoriesController = {
 
   async createCategory(req, res) {
     try {
-      const userId = req.body.userId;
+      const { userId, nome, descricao, tipo } = req.body;
 
-      if (userId === undefined) {
-        res.status(422).json({ mensagem: 'UserId é obrigatório para criar categoria' });
-      } else {
-        const categoryId = await _createCategory(req.body, userId);
-        res.status(201).json({ id: categoryId, ...req.body });
+      // Validação dos campos obrigatórios
+      if (!userId) {
+        return res.status(422).json({ mensagem: 'UserId é obrigatório para criar categoria' });
       }
+      if (!nome || !tipo) {
+        return res.status(422).json({ mensagem: 'Nome e Tipo são obrigatórios para criar categoria' });
+      }
+
+      // Chama o model para criar a categoria
+      const categoryId = await _createCategory({ nome, descricao, tipo }, userId);
+      res.status(201).json({ id: categoryId, nome, descricao, tipo, userId });
     } catch (error) {
       console.error(error);
       res.status(500).json({ mensagem: 'Erro ao criar categoria' });

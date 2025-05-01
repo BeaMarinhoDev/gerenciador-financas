@@ -19,11 +19,11 @@ CREATE TABLE `users` (
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(255) NOT NULL,
-  `descricao` text,
-  `tipo` varchar(50) NOT NULL,
+  `descricao` varchar(255) DEFAULT NULL,
+  `tipo` enum('D','C') NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1
 
 CREATE TABLE `users_categories` (
   `user_id` int(11) NOT NULL,
