@@ -4,7 +4,7 @@ export const getAllCategories = async () => {
   try {
     const db = await connect();
     const [rows] = await db.execute('SELECT * FROM categories');
-    await db.end();
+    
     return rows;
   } catch (error) {
     console.error(error);
@@ -35,7 +35,7 @@ export const createCategory = async (category, userId) => {
       [userId, categoryId]
     );
 
-    await db.end();
+    
     return categoryId;
   } catch (error) {
     console.error(error);
@@ -53,7 +53,7 @@ export const getCategoriesByUserId = async (userId) => {
        WHERE uc.user_id = ?`,
       [userId]
     );
-    await db.end();
+    
     return rows;
   } catch (error) {
     console.error(error);
@@ -69,7 +69,7 @@ export const updateCategoryById = async (id, category) => {
       'UPDATE categories SET nome = ?, descricao = ?, tipo = ? WHERE id = ?',
       [nome, descricao, tipo, id]
     );
-    await db.end();
+    
     return result.affectedRows;
   } catch (error) {
     console.error(error);
@@ -87,7 +87,7 @@ export const deleteCategoryById = async (id) => {
     // Excluir a categoria na tabela categories
     const [result] = await db.execute('DELETE FROM categories WHERE id = ?', [id]);
 
-    await db.end();
+    
     return result.affectedRows;
   } catch (err) {
     console.error('Error:', err);
@@ -102,7 +102,7 @@ export const getCategoryById = async (categoryId) => {
       'SELECT * FROM categories WHERE id = ?',
       [categoryId]
     );
-    await db.end();
+    
     return rows.length > 0 ? rows[0] : null;
   } catch (error) {
     console.error('Erro ao buscar categoria por ID:', error);

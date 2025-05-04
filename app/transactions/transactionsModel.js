@@ -33,7 +33,7 @@ export const getTransactionsByUserId = async (userId) => {
           WHERE
             user_id = ?
         `, [userId, userId]);
-        await db.end();
+        
         return rows;
     } catch (error) {
         console.error('Erro ao buscar transações:', error);
@@ -46,7 +46,7 @@ export const getTransactionsByUserId = async (userId) => {
         this.valor = data.valor;
         this.descricao = data.descricao;
         this.data = data.data;
-        this.categoria_id = 19; // data.categoria_id;
+        this.categoria_id = 19; 
         this.user_id = data.user_id;
     }
 
@@ -58,7 +58,7 @@ export const getTransactionsByUserId = async (userId) => {
               VALUES (?, ?, ?, ?, ?, ?)
             `, [this.tipo, this.valor, this.data, this.descricao, this.categoria_id, this.user_id]);
             this.id = result.insertId;
-            await db.end();
+            
             return this;
         } catch (error) {
             console.error('Erro ao salvar transação:', error);
@@ -74,7 +74,7 @@ export const getUserCategoriesByType = async (userId, tipo) => {
             'SELECT id, descricao FROM categories WHERE user_id = ? AND tipo = ?',
             [userId, tipo]
         );
-        await db.end();
+        
         return rows;
     } catch (error) {
         console.error(`Erro ao buscar categorias do usuário (${tipo}):`, error);
@@ -92,7 +92,7 @@ export const getRecentTransactionsByUserId = async (userId) => {
           LIMIT 10
       `;
       const [rows] = await db.execute(query, [userId]); // Substitua `db` pelo seu objeto de conexão ao banco
-      await db.end(); // Feche a conexão após a consulta
+       // Feche a conexão após a consulta
       return rows;
   } catch (error) {
       console.error('Erro ao buscar transações recentes:', error);

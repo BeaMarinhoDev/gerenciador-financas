@@ -5,7 +5,7 @@ export const getAllUsers = async () => {
   try {
     const db = await connect();
     const [rows] = await db.execute('SELECT * FROM users');
-    await db.end();
+    
     return rows;
   } catch (err) {
     console.error('Error:', err);
@@ -27,7 +27,7 @@ export const createUser = async (user) => {
     const db = await connect();
     const [existingUser] = await db.execute('SELECT * FROM users WHERE email = ?', [emailCleaned]);
     if (existingUser.length > 0) {
-      await db.end();
+      
       throw new Error('E-mail já cadastrado');
     }
 
@@ -35,7 +35,7 @@ export const createUser = async (user) => {
       'INSERT INTO users (nome, email, senha, cpf, cep, numero, complemento) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [nomeCleaned, emailCleaned, hashedPassword, cpfCleaned, cepCleaned, numeroCleaned, complementoCleaned]
     );
-    await db.end();
+    
     return result.insertId;
   } catch (err) {
     console.error('Error:', err);
@@ -47,7 +47,7 @@ export const loginUser = async (email, senha) => {
   try {
     const db = await connect();
     const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
-    await db.end();
+    
 
     if (rows.length === 0) {
       throw new Error('Usuário não encontrado');
@@ -71,7 +71,7 @@ export const getUserById = async (userId) => {
   try {
     const db = await connect();
     const [rows] = await db.execute('SELECT * FROM users WHERE id = ?', [userId]);
-    await db.end();
+    
     return rows.length > 0 ? rows[0] : null;
   } catch (err) {
     console.error('Error:', err);
@@ -89,7 +89,7 @@ export const updateUserById = async (id, user) => {
       'UPDATE users SET nome = ?, email = ?, senha = ?, cpf = ?, cep = ?, numero = ?, complemento = ? WHERE id = ?',
       [nome, email, hashedPassword, cpf, cep, numero, complemento, id]
     );
-    await db.end();
+    
     return result.affectedRows;
   } catch (err) {
     console.error('Error:', err);
@@ -101,7 +101,7 @@ export const deleteUserById = async (id) => {
   try {
     const db = await connect();
     const [result] = await db.execute('DELETE FROM users WHERE id = ?', [id]);
-    await db.end();
+    
     return result.affectedRows;
   } catch (err) {
     console.error('Error:', err);
@@ -118,7 +118,7 @@ export const getUserCategories = async (userId) => {
        WHERE uc.user_id = ?`,
       [userId]
     );
-    await db.end();
+    
     return rows;
   } catch (error) {
     console.error(error);
@@ -135,7 +135,7 @@ export const getUserBalance = async (userId) => {
         (SELECT COALESCE(SUM(valor), 0) FROM debits WHERE user_id = ?) AS balance`,
       [userId, userId]
     );
-    await db.end();
+    
     return rows[0].balance;
   } catch (error) {
     console.error(error);
@@ -163,7 +163,7 @@ export const getUserReportsByCategory = async (userId, categoryId) => {
       ORDER BY data DESC`,
       [userId, categoryId, userId, categoryId]
     );
-    await db.end();
+    
     return rows;
   } catch (error) {
     console.error(error);
@@ -191,7 +191,7 @@ export const getUserReportsByPeriod = async (userId, startDate, endDate) => {
       ORDER BY data DESC`,
       [userId, startDate, endDate, userId, startDate, endDate]
     );
-    await db.end();
+    
     return rows;
   } catch (error) {
     console.error(error);
@@ -203,7 +203,7 @@ export const getUserByEmail = async (email) => {
   try {
     const db = await connect();
     const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
-    await db.end();
+    
     return rows[0];
   } catch (err) {
     console.error('Erro ao buscar usuário por e-mail:', err);

@@ -3,28 +3,32 @@ import { getTransactionsByUserId, Transaction } from './transactionsModel.js'; /
 const transactionController = {
     async getRecentTransactions(req, res) {
         const userId = req.user.id;
-    
-        if (userId) {
-            try {
-                const recentTransactions = await getTransactionsByUserId(userId); // Buscar as 5 mais recentes
-                return res.json(recentTransactions);
-            } catch (error) {
-                console.error('Erro ao buscar transações recentes:', error);
-                return res.status(500).json({ message: 'Erro ao buscar histórico de transações.' });
-            }
-        } else {
+        console.log(`[GET RECENT TRANSACTIONS] Iniciando busca de transações recentes para o usuário ID: ${userId}`);
+
+        if (!userId) {
+            console.warn(`[GET RECENT TRANSACTIONS] Falha: Usuário não autenticado`);
             return res.status(401).json({ message: 'Usuário não autenticado.' });
+        }
+
+        try {
+            const recentTransactions = await getTransactionsByUserId(userId); // Buscar as 5 mais recentes
+            console.log(`[GET RECENT TRANSACTIONS] Transações recentes encontradas para o usuário ID: ${userId}`);
+            res.json(recentTransactions);
+        } catch (error) {
+            console.error(`[GET RECENT TRANSACTIONS] Erro ao buscar transações recentes para o usuário ID: ${userId}`, error);
+            res.status(500).json({ message: 'Erro ao buscar histórico de transações.' });
         }
     },
 
     async addCredit(req, res) {
-     
+        console.log(`[ADD CREDIT] Iniciando adição de crédito`);
         try {
             const { valor, descricao, data_vencimento, category_id } = req.body;
             const user_id = req.user.id; // Obtido do middleware de autenticação
 
-            // Validação dos dados (você pode usar bibliotecas como Joi)
+            // Validação dos dados
             if (!valor || !descricao || !data_vencimento) {
+                console.warn(`[ADD CREDIT] Falha: Campos obrigatórios ausentes`);
                 return res.status(400).json({ message: 'Valor, descrição e data são obrigatórios.' });
             }
 
@@ -38,21 +42,23 @@ const transactionController = {
             });
 
             await newTransaction.save();
-
-            return res.status(201).json({ message: 'Crédito adicionado com sucesso!', transaction: newTransaction });
+            console.log(`[ADD CREDIT] Crédito adicionado com sucesso. ID: ${newTransaction.id}`);
+            res.status(201).json({ message: 'Crédito adicionado com sucesso!', transaction: newTransaction });
         } catch (error) {
-            console.error('Erro ao adicionar crédito:', error);
-            return res.status(500).json({ message: 'Erro ao adicionar crédito.' });
+            console.error(`[ADD CREDIT] Erro ao adicionar crédito`, error);
+            res.status(500).json({ message: 'Erro ao adicionar crédito.' });
         }
     },
 
     async addDebit(req, res) {
+        console.log(`[ADD DEBIT] Iniciando adição de débito`);
         try {
-            const { valor, descricao, data_vencimento, category_id } = req.body; // Removed user_id from destructuring
+            const { valor, descricao, data_vencimento, category_id } = req.body;
             const user_id = req.user.id; // Obtido do middleware de autenticação
 
             // Validação dos dados
             if (!valor || !descricao || !data_vencimento) {
+                console.warn(`[ADD DEBIT] Falha: Campos obrigatórios ausentes`);
                 return res.status(400).json({ message: 'Valor, descrição e data são obrigatórios.' });
             }
 
@@ -66,12 +72,11 @@ const transactionController = {
             });
 
             await newTransaction.save();
-
-
-            return res.status(201).json({ message: 'Débito adicionado com sucesso!', transaction: newTransaction });
+            console.log(`[ADD DEBIT] Débito adicionado com sucesso. ID: ${newTransaction.id}`);
+            res.status(201).json({ message: 'Débito adicionado com sucesso!', transaction: newTransaction });
         } catch (error) {
-            console.error('Erro ao adicionar débito:', error);
-            return res.status(500).json({ message: 'Erro ao adicionar débito.' });
+            console.error(`[ADD DEBIT] Erro ao adicionar débito`, error);
+            res.status(500).json({ message: 'Erro ao adicionar débito.' });
         }
     },
 };
