@@ -1,5 +1,11 @@
-import * as server from './app/config/server.js';
+import * as server from './app/_config/server.js';
+import dotenv from 'dotenv';
 
-server.app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
+dotenv.config();
+
+// Usa a porta dinâmica do .env
+const PORT = process.env.HTTP_PORT || 3000;
+
+server.app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
