@@ -1,4 +1,4 @@
-import jsonwebtoken from 'jsonwebtoken'; // Importa o módulo como um todo
+import jsonwebtoken from 'jsonwebtoken';
 import { getUserByEmail, createUser } from '../users/usersModel.js';
 import { compare } from 'bcryptjs';
 import dotenv from 'dotenv';

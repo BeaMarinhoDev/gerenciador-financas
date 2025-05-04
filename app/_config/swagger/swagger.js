@@ -1,6 +1,5 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-//import swaggerDefinitions from './swaggerDefinitions.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
