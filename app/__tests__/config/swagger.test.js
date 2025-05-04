@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../app.js'; // Certifique-se de que o caminho para o arquivo principal do servidor está correto
+import app from '../../../app.js'; // Certifique-se de que o caminho para o arquivo principal do servidor está correto
 import fs from 'fs';
 import path from 'path';
 
