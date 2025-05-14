@@ -47,7 +47,7 @@ const creditsController = {
 
   async getCreditsByUserId(req, res) {
     try {
-      const userId = req.params.id;
+      const userId = req.params.id; // Obtém o ID do usuário da rota
       const credits = await _getCreditsByUserId(userId);
       res.json(credits);
     } catch (error) {

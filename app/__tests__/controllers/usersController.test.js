@@ -30,4 +30,18 @@ describe('Testes básicos para usersController', () => {
     const response = await request(app).delete('/users/1'); // Substitua 1 por um ID válido
     expect(response.status).toBe(200);
   });
+
+  test('Deve atualizar o usuário com um CEP válido de até 15 caracteres', async () => {
+    const response = await request(app)
+      .put('/users/1')
+      .send({
+        nome: 'João Silva',
+        email: 'joao.silva@email.com',
+        cep: '12345-678',
+        numero: '123',
+        complemento: 'Apto 101'
+      });
+    expect(response.status).toBe(200);
+    expect(response.body.mensagem).toBe('Usuário atualizado com sucesso.');
+  });
 });
