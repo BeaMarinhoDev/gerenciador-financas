@@ -47,7 +47,7 @@ const debitsController = {
 
   async getDebitsByUserId(req, res) {
     try {
-      const userId = req.params.id;
+      const userId = req.params.id; // Obtém o ID do usuário da rota
       const debits = await _getDebitsByUserId(userId);
       res.json(debits);
     } catch (error) {

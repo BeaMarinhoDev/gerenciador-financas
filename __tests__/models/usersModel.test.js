@@ -1,4 +1,4 @@
-import { getAllUsers, getUserById, createUser, deleteUser } from '../../app/models/usersModel.js';
+import { getAllUsers, getUserById, createUser, deleteUser, updateUserById } from '../../app/models/usersModel.js';
 
 describe('Testes básicos para usersModel', () => {
   test('Deve retornar todos os usuários', async () => {
@@ -30,5 +30,32 @@ describe('Testes básicos para usersModel', () => {
   test('Deve deletar um usuário existente com sucesso', async () => {
     const result = await deleteUser(1); // Substitua 1 por um ID válido
     expect(result).toBe(true);
+  });
+});
+
+describe('Testes para updateUserById', () => {
+  test('Deve atualizar um usuário sem alterar a senha', async () => {
+    const affectedRows = await updateUserById(1, {
+      nome: 'Novo Nome',
+      email: 'novoemail@email.com',
+      cpf: '12345678901',
+      cep: '12345678',
+      numero: '123',
+      complemento: 'Apto 101',
+    });
+    expect(affectedRows).toBeGreaterThan(0);
+  });
+
+  test('Deve atualizar um usuário com nova senha', async () => {
+    const affectedRows = await updateUserById(1, {
+      nome: 'Novo Nome',
+      email: 'novoemail@email.com',
+      senha: 'novaSenha123',
+      cpf: '12345678901',
+      cep: '12345678',
+      numero: '123',
+      complemento: 'Apto 101',
+    });
+    expect(affectedRows).toBeGreaterThan(0);
   });
 });

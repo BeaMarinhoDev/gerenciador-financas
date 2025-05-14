@@ -83,12 +83,37 @@ export const updateUserById = async (id, user) => {
   try {
     const db = await connect();
     const { nome, email, senha, cpf, cep, numero, complemento } = user;
-    const hashedPassword = await hash(senha, 10);
 
-    const [result] = await db.execute(
-      'UPDATE users SET nome = ?, email = ?, senha = ?, cpf = ?, cep = ?, numero = ?, complemento = ? WHERE id = ?',
-      [nome, email, hashedPassword, cpf, cep, numero, complemento, id]
-    );
+    let hashedPassword = null;
+    if (senha) {
+      hashedPassword = await hash(senha, 10); // Gera o hash apenas se a senha for fornecida
+    }
+
+    const query = `
+      UPDATE users
+      SET
+        nome = ?,
+        email = ?,
+        ${senha ? 'senha = ?,' : ''} -- Atualiza a senha apenas se ela for fornecida
+        cpf = ?,
+        cep = ?,
+        numero = ?,
+        complemento = ?
+      WHERE id = ?
+    `;
+
+    const params = [
+      nome,
+      email,
+      ...(senha ? [hashedPassword] : []), // Adiciona o hash da senha apenas se ela for fornecida
+      cpf,
+      cep,
+      numero,
+      complemento,
+      id,
+    ];
+
+    const [result] = await db.execute(query, params);
     await db.end();
     return result.affectedRows;
   } catch (err) {
@@ -136,7 +161,7 @@ export const getUserBalance = async (userId) => {
       [userId, userId]
     );
     await db.end();
-    return rows[0].balance;
+    return rows[0].balance; // Retorna o saldo calculado
   } catch (error) {
     console.error(error);
     throw error;

@@ -9,7 +9,7 @@ CREATE TABLE `users` (
   `senha` varchar(255) NOT NULL,
   `data_cadastro` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cpf` varchar(11) DEFAULT NULL,
-  `cep` varchar(8) DEFAULT NULL,
+  `cep` varchar(15) DEFAULT NULL,
   `numero` varchar(10) DEFAULT NULL,
   `complemento` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
